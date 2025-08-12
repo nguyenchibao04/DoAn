@@ -1,0 +1,185 @@
+CREATE DATABASE [TTGShop];
+GO
+USE [TTGShop];
+GO
+
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+
+CREATE TABLE [dbo].[KhachHang](
+    [makhachhang] INT IDENTITY(1,1) NOT NULL,
+    [hoten] NVARCHAR(50) NOT NULL,
+    [diachi] NVARCHAR(500) NULL,
+    [dienthoai] NCHAR(15) NULL,
+    [email] VARCHAR(100) NULL,
+    [matkhau] NCHAR(10) NULL,
+    [trangthai] BIT NULL CONSTRAINT [DF_KhachHang_trangthai] DEFAULT ((1)),
+    [chucvu] BIT NULL CONSTRAINT [DF_KhachHang_chucvu] DEFAULT ((1)),
+    [tinh] NVARCHAR(500) NULL,
+    [huyen] NVARCHAR(500) NULL,
+    [xa] NVARCHAR(500) NULL,
+    [thon] NVARCHAR(500) NULL,
+    [ngaydangky] DATE NULL CONSTRAINT [DF_KhachHang_ngaydangky] DEFAULT (GETDATE()),
+    CONSTRAINT [PK_KhachHang] PRIMARY KEY CLUSTERED ([makhachhang] ASC)
+);
+GO
+
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+CREATE TABLE [dbo].[HangSP](
+    [mahang] INT IDENTITY(1,1) NOT NULL,
+    [tenhang] NVARCHAR(50) NOT NULL,
+    [trangthai] BIT NOT NULL CONSTRAINT [DF_HangSP_trangthai] DEFAULT ((1)),
+    CONSTRAINT [PK_HangSP] PRIMARY KEY CLUSTERED ([mahang] ASC)
+);
+GO
+
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+CREATE TABLE [dbo].[SanPham](
+    [masp] INT IDENTITY(1,1) NOT NULL,
+    [mahang] INT NOT NULL,
+    [tensp] NVARCHAR(500) NOT NULL,
+    [hinhanh] NVARCHAR(500) NULL,
+    [soluong] INT NULL,
+    [giaban] DECIMAL(18, 0) NULL,
+    [mota] TEXT NULL,
+    [CPU] NVARCHAR(500) NULL,
+    [RAM] NVARCHAR(500) NULL,
+    [OS] NVARCHAR(50) NULL,
+    [manhinh] NVARCHAR(500) NULL,
+    [carddohoa] NVARCHAR(200) NULL,
+    [SSD] NCHAR(50) NULL,
+    [trangthai] BIT NULL CONSTRAINT [DF_SanPham_trangthai] DEFAULT ((1)),
+    [model] NVARCHAR(200) NULL,
+    CONSTRAINT [PK_SanPham] PRIMARY KEY CLUSTERED ([masp] ASC),
+    CONSTRAINT [FK_SanPham_HangSP] FOREIGN KEY ([mahang]) REFERENCES [dbo].[HangSP]([mahang])
+) TEXTIMAGE_ON [PRIMARY];
+GO
+ALTER TABLE SanPham ALTER COLUMN mota nvarchar(MAX) NULL
+
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+CREATE TABLE [dbo].[DonHang](
+    [madonhang] INT IDENTITY(1,1) NOT NULL,
+    [makhachhang] INT NOT NULL,
+    [dienthoai] NCHAR(15) NULL,
+    [diachi] NVARCHAR(500) NULL,
+    [ngaydat] DATE NOT NULL CONSTRAINT [DF_DonHang_ngaydat] DEFAULT (GETDATE()),
+    [ngaynhan] DATE NOT NULL,
+    [thanhtoan] NVARCHAR(150) NOT NULL,
+    [soluongmua] INT NULL,
+    [tongtien] DECIMAL(18, 0) NULL,
+    [trangthai] BIT NULL CONSTRAINT [DF_DonHang_trangthai] DEFAULT ((0)),
+    CONSTRAINT [PK_DonHang] PRIMARY KEY CLUSTERED ([madonhang] ASC),
+    CONSTRAINT [FK_DonHang_KhachHang] FOREIGN KEY ([makhachhang]) REFERENCES [dbo].[KhachHang]([makhachhang])
+);
+
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+CREATE TABLE [dbo].[DonHangChiTiet](
+    [machitietdonhang] INT NOT NULL,
+    [madonhang] INT NOT NULL,
+    [masp] INT NOT NULL,
+    [soluong] INT NULL,
+    [gia] DECIMAL(18, 0) NULL,
+    [tongtien] DECIMAL(18, 0) NULL,
+    CONSTRAINT [FK_DonHangChiTiet_DonHang] FOREIGN KEY ([madonhang]) REFERENCES [dbo].[DonHang]([madonhang]),
+    CONSTRAINT [FK_DonHangChiTiet_SanPham] FOREIGN KEY ([masp]) REFERENCES [dbo].[SanPham]([masp])
+);
+GO
+
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+CREATE TABLE [dbo].[GioHang](
+    [magiohang] INT IDENTITY(1,1) NOT NULL,
+    [masp] INT NOT NULL,
+    [makhachhang] INT NOT NULL,
+    [soluong] INT NOT NULL,
+    CONSTRAINT [PK_GioHang] PRIMARY KEY CLUSTERED ([magiohang] ASC),
+    CONSTRAINT [FK_GioHang_KhachHang] FOREIGN KEY ([makhachhang]) REFERENCES [dbo].[KhachHang]([makhachhang]),
+    CONSTRAINT [FK_GioHang_SanPham] FOREIGN KEY ([masp]) REFERENCES [dbo].[SanPham]([masp])
+);
+GO
+
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+CREATE TABLE [dbo].[TinTuc](
+    [matintuc] INT IDENTITY(1,1) NOT NULL,
+    [tieude] NVARCHAR(500) NULL,
+    [hinhanh] NVARCHAR(50) NULL,
+    [ngaytao] DATE NULL,
+    [gioithieu] NVARCHAR(500) NULL,
+    [trangthai] BIT NULL,
+    [makhachhang] INT NULL,
+    [noidung] TEXT NULL,
+    CONSTRAINT [PK_TinTuc] PRIMARY KEY CLUSTERED ([matintuc] ASC)
+) TEXTIMAGE_ON [PRIMARY];
+GO
+
+
+SET IDENTITY_INSERT [dbo].[DonHang] ON 
+
+INSERT [dbo].[DonHang] ([madonhang], [makhachhang], [dienthoai], [diachi], [ngaydat], [ngaynhan], [thanhtoan], [soluongmua], [tongtien], [trangthai]) VALUES (55, 6, N'0393571677', N'Xóm 1,Đồng Lạc,Tiên Dược,Sóc Sơn,Hà Nội', CAST(N'2024-12-06' AS Date), CAST(N'2024-12-09' AS Date), N'Thanh toán khi nhận hàng', NULL, CAST(44960000 AS Decimal(18, 0)), 1)
+
+SET IDENTITY_INSERT [dbo].[DonHang] OFF
+GO
+INSERT [dbo].[DonHangChiTiet] ([machitietdonhang], [madonhang], [masp], [soluong], [gia], [tongtien]) VALUES (0, 55, 64, 2, CAST(7990000 AS Decimal(18, 0)), NULL)
+GO
+SET IDENTITY_INSERT [dbo].[HangSP] ON 
+
+INSERT [dbo].[HangSP] ([mahang], [tenhang], [trangthai]) VALUES (12, N'PC Gaming', 1)
+INSERT [dbo].[HangSP] ([mahang], [tenhang], [trangthai]) VALUES (13, N'PC Workstation', 1)
+INSERT [dbo].[HangSP] ([mahang], [tenhang], [trangthai]) VALUES (14, N'PC Văn Phòng', 1)
+INSERT [dbo].[HangSP] ([mahang], [tenhang], [trangthai]) VALUES (15, N'PC AMD GAMING', 1)
+INSERT [dbo].[HangSP] ([mahang], [tenhang], [trangthai]) VALUES (16, N'PC CORE ULTRA', 1)
+INSERT [dbo].[HangSP] ([mahang], [tenhang], [trangthai]) VALUES (17, N'PC Cao Cấp', 1)
+INSERT [dbo].[HangSP] ([mahang], [tenhang], [trangthai]) VALUES (18, N'PC Mini', 1)
+SET IDENTITY_INSERT [dbo].[HangSP] OFF
+GO
+SET IDENTITY_INSERT [dbo].[KhachHang] ON 
+
+INSERT [dbo].[KhachHang] ([makhachhang], [hoten], [diachi], [dienthoai], [email], [matkhau], [trangthai], [chucvu], [tinh], [huyen], [xa], [thon], [ngaydangky]) VALUES (6, N'Nguyễn Chí Bảo', N'TP Hà Nội', N'0384387378', N'admin@gmail.com', N'12345678', 0, 1, N'TP Hà Nội', N'Sóc Sơn', N'Tiên Dược', N'Đồng Lạc', CAST(N'2025-04-05' AS Date))
+INSERT [dbo].[KhachHang] ([makhachhang], [hoten], [diachi], [dienthoai], [email], [matkhau], [trangthai], [chucvu], [tinh], [huyen], [xa], [thon], [ngaydangky]) VALUES (34, N'Nguyễn Văn A', N'TP Hồ Chí Minh', N'0987654322', N'vana@gmail.com', N'123456', NULL, NULL, N'TP Hồ Chí Minh', N'Bình Thạnh', N'Văn Lợi', N'0', CAST(N'2024-05-14' AS Date))
+
+
+SET IDENTITY_INSERT [dbo].[KhachHang] OFF
+GO
+SET IDENTITY_INSERT [dbo].[SanPham] ON 
+INSERT INTO [dbo].[SanPham] 
+([masp], [mahang], [tensp], [hinhanh], [soluong], [giaban], [mota], 
+ [CPU], [RAM], [OS], [manhinh], [carddohoa], [SSD], [trangthai], [model])
+VALUES 
+(64, 14, 
+N'PC TTG HOME OFFICE Core i3 10105', 
+N'', 
+18, CAST(7990000 AS Decimal(18, 0)), 
+N'.', 
+N'', N'8GB', N'', N'', 
+N'', N'256GB', 1, N'');
+
+
+update SanPham set tensp=N'PC TTG HOME OFFICE Core i3 10105 - RAM 8GB- SSD 256GB',
+				   hinhanh=N''
+
+SET IDENTITY_INSERT [dbo].[SanPham] OFF
+GO
+SET IDENTITY_INSERT [dbo].[TinTuc] ON 
+
+INSERT [dbo].[TinTuc] ([matintuc], [tieude], [hinhanh], [ngaytao], [gioithieu], [trangthai], [makhachhang], [noidung]) VALUES (14, N'fgh', N'TP.Long_Khanh.jpg', CAST(N'0001-01-01' AS Date), N'dgf', 1, 6, N'nguyên duy dsadfasdf')
+SET IDENTITY_INSERT [dbo].[TinTuc] OFF
+GO
