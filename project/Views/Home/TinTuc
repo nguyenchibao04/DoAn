@@ -1,0 +1,79 @@
+
+@{
+    ViewBag.Title = "TinTuc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var dsTinTuc = ViewBag.dsTinTuc as List<WebApplication17.Models.TinTuc>;
+}
+
+<main class="main">
+ 
+
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html"><b>Tin Tức</b></a></li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10">
+
+                    @if (ViewBag.dsTinTuc != null)
+                    {
+                        foreach (var tin in ViewBag.dsTinTuc)
+                        {
+
+                            <article class="entry entry-list">
+                                <div class="row align-items-center">
+                                    <div class="col-md-5">
+                                        <figure class="entry-media">
+                                            <a href="single.html">
+                                                <img src="~/Content/assets/images/blog/listing/post-1.jpg" alt="image desc">
+                                            </a>
+                                        </figure>
+                                    </div>
+
+                                    <div class="col-md-7">
+                                        <div class="entry-body">
+                                            <div class="entry-meta">
+                                                <span class="entry-author">
+                                                    by <a href="#">John Doe</a>
+                                                </span>
+                                                <span class="meta-separator">|</span>
+                                                <a href="#">Nov 22, 2018</a>
+                                                <span class="meta-separator">|</span>
+                                                <a href="#">2 Comments</a>
+                                            </div>
+
+                                            <h2 class="entry-title">
+                                                <a href="single.html">Cras ornare tristique elit.</a>
+                                            </h2>
+
+                                            <div class="entry-cats">
+                                                in <a href="#">Lifestyle</a>,
+                                                <a href="#">Shopping</a>
+                                            </div>
+
+                                            <div class="entry-content">
+                                                <p>Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Suspendisse potenti. Sed egestas ... </p>
+                                                <a href="single.html" class="read-more">Continue Reading</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    }
+                    else
+                    {
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
