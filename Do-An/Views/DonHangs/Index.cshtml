@@ -1,0 +1,98 @@
+﻿@model IEnumerable<WebApplication17.Models.DonHang>
+@using WebApplication17.Models
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Đơn Hàng</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="cart">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-cart table-mobile">
+                            <thead>
+                                <tr>
+                                    <th>Mã Đơn Hàng</th>
+                                    <th>Họ Tên</th>
+                                    <th>Điện Thoại</th>
+                                    <th>Địa Chỉ</th>
+                                    <th>Ngày Đặt</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Trạng Thái</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        if (item.makhachhang.ToString() == Session["ma"].ToString())
+                                        {
+                                            <tr>
+                                                <td>@item.madonhang</td>
+                                                <td>@item.KhachHang.hoten</td>
+                                                <td>@item.dienthoai</td>
+                                                <td>@item.diachi</td>
+                                                <td>@item.ngaydat.ToString("dd/MM/yyyy")</td>
+                                                <td>@((item.tongtien ?? 0).ToString("#,##0")) đ</td>
+                                                <td>
+                                                    @switch (item.trangthai)
+                                                    {
+                                                        case TrangThaiDonHang.ChoXacNhan:
+                                                            <span class="text-warning">Chờ xác nhận</span>
+                                                            break;
+                                                        case TrangThaiDonHang.DaThanhToan:
+                                                            <span class="text-warning">Đã thanh toán</span>
+                                                            break;
+                                                        case TrangThaiDonHang.DangGiao:
+                                                            <span class="text-primary">Đang giao</span>
+                                                            break;
+                                                        case TrangThaiDonHang.DaGiao:
+                                                            <span class="text-success">Đã giao</span>
+                                                            break;
+                                                        case TrangThaiDonHang.DaHuy:
+                                                            <span class="text-danger">Đã hủy</span>
+                                                            break;
+                                                    }
+                                                </td>
+                                                <td class="remove-col">
+                                                    <a href="~/DonHangs/ChiTietDonHang/@item.madonhang" class="btn-remove donhangchitiet">
+                                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>Chi tiết
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="8"><h5>Bạn chưa có đơn hàng nào !</h5></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+    .donhangchitiet:hover {
+        cursor: pointer;
+    }
+</style>

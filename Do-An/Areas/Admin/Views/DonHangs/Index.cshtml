@@ -1,0 +1,289 @@
+﻿@model PagedList.IPagedList<WebApplication17.Models.DonHang>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/donhangs" class="nav-link">Đơn hàng</a>
+        </li>
+    </ul>
+
+    <ul class="navbar-nav ml-auto">
+        <!-- Navbar Search -->
+        <li class="nav-item">
+            <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                <i class="fas fa-search"></i>
+            </a>
+            <div class="navbar-search-block">
+                <form class="form-inline" action="/admin/donhangs/index" method="post">
+                    <div class="input-group input-group-sm">
+                        <input class="form-control form-control-navbar" name="search" value="@ViewBag.CurrentFilter" placeholder="Từ khóa tìm kiếm" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="far fa-comments"></i>
+                <span class="badge badge-danger navbar-badge">3</span>
+            </a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="far fa-bell"></i>
+                <span class="badge badge-warning navbar-badge">15</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <i class="fas fa-expand-arrows-alt"></i>
+            </a>
+        </li>
+    </ul>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/Admin/Home">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý đơn hàng</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title" style="padding-right:20px"><b>Danh sách đơn hàng</b></h3>
+            <form action="/admin/donhangs/index" method="get" class="form-inline mb-3">
+                <input type="number" name="searchMaDH" value="@ViewBag.SearchMaDH"
+                       class="form-control mr-2" placeholder="Mã đơn hàng" />
+
+                <input type="text" name="searchSDT" value="@ViewBag.SearchSDT"
+                       class="form-control mr-2" placeholder="Số điện thoại" />
+
+                <button type="submit" class="btn btn-primary mr-2">
+                    <i class="fas fa-search"></i>
+                </button>
+                <a href="/admin/donhangs/index" class="btn btn-secondary">
+                    <i class="fas fa-sync"></i>
+                </a>
+            </form>
+            <button id="btnDeleteMode" class="btn btn-danger mb-2">Xóa đơn hàng</button>
+            <button id="btnDeleteConfirm" class="btn btn-danger mb-2 d-none">Xác nhận xóa</button>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-hover text-center">
+                <thead>
+                    <tr>
+                        <th class="d-none select-col">Chọn</th>
+                        <th>STT</th>
+                        <th>Họ tên</th>
+                        <th>Điện thoại</th>
+                        <th style="width: 350px">Địa chỉ</th>
+                        <th>Ngày đặt</th>
+                        <th>HTTT</th>
+                        <th>Trạng thái</th>
+                        <th>Thực hiện</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var i = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="select-col d-none">
+                                    @if (item.trangthai == WebApplication17.Models.TrangThaiDonHang.ChoXacNhan
+                                        || item.trangthai == WebApplication17.Models.TrangThaiDonHang.DaHuy)
+
+                                    {
+                                        <input type="checkbox" class="delete-checkbox" value="@item.madonhang" />
+                                    }
+                                </td>
+                                <td>
+                                    @i <br />
+                                    <small style="color:gray">#@item.madonhang</small> <!-- hiển thị mã sản phẩm -->
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.KhachHang.hoten)</td>
+                                <td>@Html.DisplayFor(modelItem => item.dienthoai)</td>
+                                <td>@Html.DisplayFor(modelItem => item.diachi)</td>
+                                <td>@item.ngaydat.ToString("dd/MM/yyyy")</td>
+                                <td>@Html.DisplayFor(modelItem => item.thanhtoan)</td>
+
+                                <td>
+                                    @switch (item.trangthai)
+                                    {
+                                        case WebApplication17.Models.TrangThaiDonHang.ChoXacNhan:
+                                            <span class="text-warning">Chờ xác nhận</span>
+                                            break;
+                                        case WebApplication17.Models.TrangThaiDonHang.DaThanhToan:
+                                            <span class="text-warning">Đã thanh toán</span>
+                                            break;
+                                        case WebApplication17.Models.TrangThaiDonHang.DangGiao:
+                                            <span class="text-primary">Đang giao</span>
+                                            break;
+                                        case WebApplication17.Models.TrangThaiDonHang.DaGiao:
+                                            <span class="text-success">Đã giao</span>
+                                            break;
+                                        case WebApplication17.Models.TrangThaiDonHang.DaHuy:
+                                            <span class="text-danger">Đã hủy</span>
+                                            break;
+                                    }
+                                </td>
+
+                                <td>
+                                    <a href="/admin/donhangs/details/@item.madonhang" class="btn btn-primary btn-sm">Chi tiết</a>
+
+                                    @* Nút cập nhật trạng thái cho Admin *@
+                                    @if (item.trangthai == WebApplication17.Models.TrangThaiDonHang.ChoXacNhan)
+                                    {
+                                        <button class="btn btn-primary btn-sm update-status" data-id="@item.madonhang" data-status="DangGiao">Xác nhận</button>
+                                        <button class="btn btn-danger btn-sm cancel-order" data-id="@item.madonhang">Hủy</button>
+                                    }
+                                    else if (item.trangthai == WebApplication17.Models.TrangThaiDonHang.DaThanhToan)
+                                    {
+                                        <button class="btn btn-success btn-sm update-status" data-id="@item.madonhang" data-status="DangGiao">Giao hàng</button>
+                                        <button class="btn btn-danger btn-sm cancel-order" data-id="@item.madonhang">Hủy</button>
+                                    }
+
+                                    else if (item.trangthai == WebApplication17.Models.TrangThaiDonHang.DangGiao)
+                                    {
+                                        <button class="btn btn-success btn-sm update-status" data-id="@item.madonhang" data-status="DaGiao">Hoàn tất</button>
+                                    }
+                                    else if (item.trangthai == WebApplication17.Models.TrangThaiDonHang.DaGiao)
+                                    {
+                                        <span class="text-success">Hoàn tất</span>
+                                    }
+                                    else if (item.trangthai == WebApplication17.Models.TrangThaiDonHang.DaHuy)
+                                    {
+                                        <span class="text-danger">Đã hủy</span>
+                                    }
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8">Không có bản ghi nào!!!</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchMaDH = ViewBag.SearchMaDH, searchSDT = ViewBag.SearchSDT }))
+    </div>
+</section>
+
+<style>
+    a:hover, button:hover {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+  $(document).ready(function () {
+
+    // Cập nhật trạng thái
+    $('.update-status').click(function () {
+        var idOrder = $(this).data('id');
+        var newStatus = $(this).data('status');
+        $.ajax({
+            url: '@Url.Action("UpdateOrder", "DonHangs")',
+            type: 'POST',
+            data: { id: idOrder, status: newStatus },
+            success: function (result) {
+                if (result.success) window.location.reload();
+            },
+            error: function () { alert("Có lỗi xảy ra!"); }
+        });
+    });
+
+    // Hủy đơn hàng
+    $('.cancel-order').click(function () {
+        var idOrder = $(this).data('id');
+        if (!confirm("Bạn có chắc muốn hủy đơn này không?")) return;
+        $.ajax({
+            url: '@Url.Action("CancelOrder", "DonHangs")',
+            type: 'POST',
+            data: { id: idOrder },
+            success: function (result) {
+                if (result.success) window.location.reload();
+                else alert(result.message || "Có lỗi xảy ra!");
+            },
+            error: function () { alert("Có lỗi xảy ra!"); }
+        });
+    });
+
+    // === NÚT XÓA ĐƠN HÀNG ===
+    $('#btnDeleteMode').click(function () {
+        $('.select-col').toggleClass('d-none'); // hiện/ẩn checkbox
+        $('#btnDeleteConfirm').toggleClass('d-none'); // hiện/ẩn nút xác nhận
+    });
+
+    $('#btnDeleteConfirm').click(function () {
+        var selected = [];
+        $('.delete-checkbox:checked').each(function () {
+            selected.push($(this).val());
+        });
+
+        if (selected.length === 0) {
+            alert("Vui lòng chọn đơn hàng để xóa!");
+            return;
+        }
+
+        if (!confirm("Bạn có chắc muốn xóa " + selected.length + " đơn hàng này không?")) return;
+
+        $.ajax({
+            url: '@Url.Action("DeleteMultipleOrders", "DonHangs")',
+            type: 'POST',
+            data: { ids: selected },
+            traditional: true,
+            success: function(result) {
+                if(result.success) {
+                    alert("Xóa thành công!");
+                    window.location.reload();
+                } else {
+                    alert(result.message);
+                }
+            },
+            error: function() { alert("Có lỗi xảy ra!"); }
+        });
+    });
+
+});
+
+
+</script>

@@ -1,0 +1,233 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>TTGShop | PC Cao Cấp | PC Đẹp hiệu năng cao</title>
+    <link rel="stylesheet" href="~/Content/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/assets/css/style.css">
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="page-wrapper">
+        <main class="main">
+            <div class="login-page bg-image pt-8 pb-8" style="height: 100vh; background-image: url('/wwwroot/images/login.jpg')">
+                <div class="container">
+                    <div class="form-box">
+                        <div class="form-tab">
+                            <ul class="nav nav-pills nav-fill" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#signin-2" role="tab">ĐĂNG NHẬP</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#register-2" role="tab">ĐĂNG KÝ</a>
+                                </li>
+                                <li class="nav-item" style="display:none;">
+                                    <a class="nav-link" data-toggle="tab" href="#changepass-2" role="tab">ĐỔI MẬT KHẨU</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <!-- ĐĂNG NHẬP -->
+                                <div class="tab-pane fade active show" id="signin-2" role="tabpanel">
+                                    <form id="login-form">
+                                        <div class="form-group">
+                                            <label>Email *</label>
+                                            <input type="text" class="form-control" id="login-email" name="email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mật khẩu *</label>
+                                            <input type="password" class="form-control" id="login-password" name="password" required>
+                                        </div>
+                                        <div class="form-footer">
+                                            <button type="submit" class="btn btn-outline-primary-2">
+                                                <span>Đăng Nhập</span>
+                                            </button>
+                                            <a href="javascript:void(0)" id="forgot-password" class="ml-3">Quên mật khẩu?</a>
+                                            <a href="javascript:void(0)" id="change-password-link" class="ml-3">Đổi mật khẩu</a>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- ĐĂNG KÝ -->
+                                <div class="tab-pane fade" id="register-2" role="tabpanel">
+                                    <form id="register-form">
+                                        <div class="form-group">
+                                            <label>Họ tên *</label>
+                                            <input type="text" class="form-control" id="hoten" name="rhoten" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Địa chỉ email *</label>
+                                            <input type="email" class="form-control" id="email" name="remail" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mật khẩu *</label>
+                                            <input type="password" class="form-control" id="password1" name="rpassword" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Xác thực mật khẩu *</label>
+                                            <input type="password" class="form-control" id="password2" name="rrpassword" required>
+                                        </div>
+                                        <div class="form-footer">
+                                            <button type="submit" class="btn btn-outline-primary-2">
+                                                <span>Đăng Ký</span>
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                                <!-- ĐỔI MẬT KHẨU -->
+                                <div class="tab-pane fade" id="changepass-2" role="tabpanel">
+                                    <form id="changepass-form">
+                                        <div class="form-group">
+                                            <label>Email *</label>
+                                            <input type="email" class="form-control" id="cp-email" name="email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mật khẩu hiện tại *</label>
+                                            <input type="password" class="form-control" id="cp-oldpass" name="oldpass" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mật khẩu mới *</label>
+                                            <input type="password" class="form-control" id="cp-newpass" name="newpass" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Nhập lại mật khẩu mới *</label>
+                                            <input type="password" class="form-control" id="cp-renewpass" name="renewpass" required>
+                                        </div>
+                                        <div class="form-footer">
+                                            <button type="submit" class="btn btn-outline-primary-2">
+                                                <span>Đổi Mật Khẩu</span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS -->
+    <script src="~/Content/assets/js/jquery.min.js"></script>
+    <script src="~/Content/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/toastr.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Đăng nhập
+            $("#login-form").submit(function (e) {
+                e.preventDefault();
+                $.post("/Login/DangNhap",
+                    {
+                        email: $("#login-email").val(),
+                        password: $("#login-password").val()
+                    },
+                    function (res) {
+                        if (res.success) {
+                            toastr.success(res.message);
+                            if (res.redirectUrl) {
+                                setTimeout(function () {
+                                    window.location.href = res.redirectUrl;
+                                }, 1500);
+                            }
+                        } else {
+                            toastr.error(res.message);
+                        }
+                    }
+                );
+            });
+
+
+            // Đăng ký
+            $("#register-form").submit(function (e) {
+                e.preventDefault();
+                var hoten = $("#hoten").val();
+                var mail = $("#email").val();
+                var pass1 = $("#password1").val();
+                var pass2 = $("#password2").val();
+
+                if (!hoten || !mail || !pass1 || !pass2) {
+                    toastr.warning("Vui lòng nhập đầy đủ thông tin");
+                    return;
+                }
+
+                $.post("/Login/DangKy", { hoten: hoten, email: mail, pass: pass1, repass: pass2 }, function (result) {
+                    if (result.success) {
+                        toastr.success(result.message);
+                        setTimeout(function () { window.location.reload(); }, 2000);
+                    } else {
+                        toastr.error(result.message);
+                    }
+                });
+            });
+
+            $("#forgot-password").click(function () {
+                var email = $("#login-email").val();
+                if (!email) {
+                    toastr.warning("Vui lòng nhập email trước!");
+                    return;
+                }
+
+                $.post("/Login/QuenMatKhau", { email: email }, function (res) {
+                    if (res.success) {
+                        toastr.success(res.message);
+                    } else {
+                        toastr.error(res.message);
+                    }
+                });
+            });
+
+            $("#changepass-form").submit(function (e) {
+                e.preventDefault();
+                var email = $("#cp-email").val();
+                var oldpass = $("#cp-oldpass").val();
+                var newpass = $("#cp-newpass").val();
+                var renewpass = $("#cp-renewpass").val();
+
+                if (!email || !oldpass || !newpass || !renewpass) {
+                    toastr.warning("Vui lòng nhập đầy đủ thông tin");
+                    return;
+                }
+                if (newpass !== renewpass) {
+                    toastr.error("Mật khẩu mới không khớp");
+                    return;
+                }
+
+                $.post("/Login/DoiMatKhau",
+                    {
+                        email: email,
+                        oldpass: oldpass,
+                        newpass: newpass,
+                        renewpass: renewpass
+                    },
+                    function (res) {
+                        if (res.success) {
+                            toastr.success(res.message);
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 2000);
+                        } else {
+                            toastr.error(res.message);
+                        }
+                    }
+                );
+            });
+
+            $("#change-password-link").click(function () {
+                // Kích hoạt tab Đổi mật khẩu
+                $('.nav-link[href="#changepass-2"]').tab('show');
+            });
+
+            
+        });
+    </script>
+</body>
+</html>

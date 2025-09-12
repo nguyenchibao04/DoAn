@@ -1,0 +1,24 @@
+﻿@model WebApplication17.Models.TinTuc
+@{
+    ViewBag.Title = Model.tieude;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/tintuc-chitiet.css" rel="stylesheet" />
+
+<div class="news-detail container">
+    <h1 class="news-title">@Model.tieude</h1>
+    <p class="news-meta">
+        Ngày đăng:
+        @(Model.ngaytao is DateTime ?
+            ((DateTime)Model.ngaytao).ToString("dd/MM/yyyy") : "")
+    </p>
+
+    <div class="news-image">
+        <img src="@Url.Content("~/wwwroot/tintuc/" + Model.hinhanh)" alt="@Model.tieude" />
+    </div>
+
+    <div class="news-content">
+        @Html.Raw(Model.noidung)
+    </div>
+</div>

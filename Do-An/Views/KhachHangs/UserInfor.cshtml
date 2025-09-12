@@ -1,0 +1,106 @@
+﻿@model WebApplication17.Models.KhachHang
+@{
+    ViewBag.Title = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="container">
+    <h2 class="mb-4">Thông tin tài khoản</h2>
+
+    <div class="card p-4 shadow-sm">
+        <form id="updateForm">
+            @Html.AntiForgeryToken()
+
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label class="form-label">Họ tên</label>
+                    @Html.TextBoxFor(m => m.hoten, new { @class = "form-control", id = "hoten" })
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Email</label>
+                    @Html.TextBoxFor(m => m.email, new { @class = "form-control", @readonly = "readonly", id = "email" })
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label class="form-label">Số điện thoại</label>
+                    @Html.TextBoxFor(m => m.dienthoai, new { @class = "form-control", id = "dienthoai" })
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Tỉnh / Thành Phố</label>
+                    <select class="form-control" id="tinh" name="tinh" ></select>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-2">
+                    <label class="form-label">Quận / Huyện</label>
+                    @Html.TextBoxFor(m => m.huyen, new { @class = "form-control", id = "huyen" })
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Phường / Xã</label>
+                    @Html.TextBoxFor(m => m.xa, new { @class = "form-control", id = "xa" })
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <div class="col-md-4">
+                    <label class="form-label">Địa chỉ cụ thể (số nhà, thôn, xóm)</label>
+                    @Html.TextAreaFor(m => m.diachi, new { @class = "form-control", rows = 2, id = "diachi" })
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" id="btnUpdate">Cập nhật</button>
+        </form>
+    </div>
+</main>
+<script src="~/Scripts/jquery-3.7.0.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    // Load danh sách tỉnh/thành phố từ JSON
+  $.getJSON('/Content/diachi.json', function(data){
+    var select = $("#tinh");
+    select.empty();
+    $.each(data.tinh, function(index, item){
+        select.append('<option value="'+item+'">'+item+'</option>');
+    });
+    // Set lại value sau khi load
+    var currentTinh = "@Model.tinh";
+    if(currentTinh){
+        select.val(currentTinh);
+    }
+});
+
+    // Click cập nhật
+    $("#btnUpdate").click(function () {
+        var data = {
+            id: @Model.makhachhang,
+            hoten: $("#hoten").val(),
+            email: $("#email").val(),
+            dienthoai: $("#dienthoai").val(),
+            tinh: $("#tinh").val(),
+            huyen: $("#huyen").val(),
+            xa: $("#xa").val(),
+            diachi: $("#diachi").val()
+        };
+
+        $.ajax({
+            url: '@Url.Action("UpdateInfor", "KhachHangs")',
+            type: 'POST',
+            data: data,
+            success: function (res) {
+                if(res.success){
+                    toastr.success(res.message, "Thành công");
+                } else {
+                    toastr.error(res.message, "Lỗi");
+                }
+            },
+            error: function () {
+                toastr.error("Đã có lỗi xảy ra!", "Lỗi");
+            }
+        });
+    });
+});
+</script>

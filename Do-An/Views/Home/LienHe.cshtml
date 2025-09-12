@@ -1,0 +1,181 @@
+﻿
+@{
+    ViewBag.Title = "LienHe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page"></li>
+            </ol>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="page-header page-header-big text-center" style="background-image: url('/Content/assets/images/contact-header-bg.jpg')">
+            <h1 class="page-title text-white">Contact us<span class="text-white">keep in touch with us</span></h1>
+        </div>
+    </div>
+
+    <div class="page-content pb-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-2 mb-lg-0">
+                    <h2 class="title mb-1">TTGShop</h2>
+                    <p class="mb-3">Trang thương mại chính thức của Dũng CT - Trực Tiếp Game. Luôn tìm kiếm những sản phẩm vì game thủ.</p>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="contact-info">
+                                <h3>Địa chỉ liên hệ</h3>
+
+                                <ul class="contact-list">
+                                    <li>
+                                        <i class="icon-map-marker"></i>
+                                        CS1: 83-85 Thái Hà - Đống Đa - Hà Nội <br />
+                                        CS2: 83A Cửu Long -Phường 15 - Q10 - TP.HCM
+                                    </li>
+                                    
+                                    <li>
+                                        <i class="icon-phone"></i>
+                                        <a href="tel:#">+0123 456 789</a>
+                                    </li>
+                                    <li>
+                                        <i class="icon-envelope"></i>
+                                        <a href="mailto:#">ttgshoponline@gmail.com</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="contact-info">
+                                <h3>Thời gian mở cửa</h3>
+
+                                <ul class="contact-list">
+                                    <li>
+                                        <i class="icon-clock-o"></i>
+                                        <span class="text-dark">Thứ 2-Thứ 7</span> <br>8h15-17h30
+                                    </li>
+                                    <li>
+                                        <i class="icon-calendar"></i>
+                                        <span class="text-dark">Chủ nhật</span> <br>11h-17h30
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="title mb-1">Mọi thắc mắc vui lòng điền vào biểu mẫu</h2>
+                    <p class="mb-2"></p>
+
+                    <form id="contact-form">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="cname" name="name" placeholder="Họ tên *" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="email" class="form-control" id="cemail" name="email" placeholder="Email *" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="tel" class="form-control" id="cphone" name="phone" placeholder="Số điện thoại">
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="csubject" name="subject" placeholder="Chủ đề">
+                            </div>
+                        </div>
+                        <textarea class="form-control" cols="30" rows="4" id="cmessage" name="message" required placeholder="Nội dung *"></textarea>
+
+                        <button type="submit" class="btn btn-outline-primary-2 btn-minwidth-sm">
+                            <span>SUBMIT</span>
+                            <i class="icon-long-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <hr class="mt-4 mb-5">
+
+            <div class="stores mb-4 mb-lg-5">
+                <h2 class="title text-center mb-3">Về cửa hàng </h2>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="store">
+                            <div class="row">
+                                <div class="col-sm-5 col-xl-6">
+                                    <figure class="store-media mb-2 mb-lg-0">
+                                        <img src="~/wwwroot/images/shop2.jpg" alt="image">
+                                    </figure>
+                                </div>
+                                <div class="col-sm-7 col-xl-6">
+                                    <div class="store-content">
+                                        <h3 class="store-title">Cửu Long Store</h3>
+                                        <address>83A Cửu Long -Phường 15 - Q10 - TP.HCM</address>
+                                        <div><a href="tel:#">+0384 387 378</a></div>
+
+                                        <h4 class="store-subtitle">Store Hours:</h4>
+                                        <div>
+                                            Thứ 2-Thứ 7: 8h15-17h30
+                                        </div>
+                                        <div>
+                                            CN: 11h-17h30
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="store">
+                            <div class="row">
+                                <div class="col-sm-5 col-xl-6">
+                                    <figure class="store-media mb-2 mb-lg-0">
+                                        <img src="~/wwwroot/images/shop1.jpg" alt="image">
+                                    </figure>
+                                </div>
+
+                                <div class="col-sm-7 col-xl-6">
+                                    <div class="store-content">
+                                        <h3 class="store-title">Thái Hà Store</h3>
+                                        <address>83-85 Thái Hà - Đống Đa - Hà Nội</address>
+                                        <div><a href="tel:#">+0123 456 789</a></div>
+                                        <h4 class="store-subtitle">Store Hours:</h4>
+                                        <div>Thứ 2-Thứ 7: 8h15-17h30</div>
+                                        <div>CN: 11h-17h30</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    $("#contact-form").submit(function (e) {
+        e.preventDefault();
+
+        $.post("/Home/GuiLienHe", {
+            name: $("#cname").val(),
+            email: $("#cemail").val(),
+            phone: $("#cphone").val(),
+            subject: $("#csubject").val(),
+            message: $("#cmessage").val()
+        }, function (res) {
+            if (res.success) {
+                toastr.success(res.message);
+                $("#contact-form")[0].reset();
+            } else {
+                toastr.error(res.message);
+            }
+        });
+    });
+</script>

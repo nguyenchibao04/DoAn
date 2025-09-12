@@ -1,0 +1,148 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var doanhthu = ViewBag.doanhthu;
+    string formattedDoanhThu = ((decimal)doanhthu).ToString("N0").Replace(",", ".");
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <i class="fas fa-expand-arrows-alt"></i>
+            </a>
+        </li>
+    </ul>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/Admin/Home">Trang chủ</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3 id="donhang">@ViewBag.donhang</h3>
+                        <p>Đơn Hàng</p>
+                    </div>
+                    <div class="icon"><i class="ion ion-bag"></i></div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3 id="doanhthu">@formattedDoanhThu đ</h3>
+                        <p>Doanh Thu</p>
+                    </div>
+                    <div class="icon"><i class="ion ion-stats-bars"></i></div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3 id="khachhang">@ViewBag.khachhang</h3>
+                        <p>Khách Hàng</p>
+                    </div>
+                    <div class="icon"><i class="ion ion-person-add"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ doanh thu -->
+        <div class="col">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="far fa-chart-bar"></i>
+                        Biểu đồ thống kê doanh thu
+                    </h3>
+                    <canvas id="myChart" style="width:100%; height: 550px;"></canvas>
+                </div>
+                <div class="card-body">
+                    <script>
+                        var myArray = JSON.parse('@Html.Raw(Json.Encode(ViewBag.doanhthuthang))');
+
+                        const xValues = ["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"];
+                        const barColors = Array(12).fill("blue");
+
+                        new Chart("myChart", {
+                            type: "bar",
+                            data: {
+                                labels: xValues,
+                                datasets: [{
+                                    backgroundColor: barColors,
+                                    data: myArray
+                                }]
+                            },
+                            options: {
+                                plugins: {
+                                    legend: { display: false },
+                                    title: { display: true, text: "Doanh thu theo tháng" }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        title: { display: true, text: "Doanh thu (VND)" }
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter chọn Hôm nay / Tuần / Tháng / Tất cả -->
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <select class="form-control" id="filterSelect">
+                    <option value="1" selected>Hôm Nay</option>
+                    <option value="2">Tuần Này</option>
+                    <option value="3">Tháng Này</option>
+                    <option value="4">Tất Cả</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $('#filterSelect').change(function () {
+            var selectedOption = $(this).val();
+            $.ajax({
+                url: '/Admin/Home/Index',
+                type: 'POST',
+                data: { fill: selectedOption },
+                success: function (result) {
+                    $('#donhang').text(result.dh);
+                    $('#doanhthu').text(result.dt.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $('#khachhang').text(result.kh);
+                },
+                error: function () { alert("Lỗi khi tải dữ liệu"); }
+            });
+        });
+    });
+</script>

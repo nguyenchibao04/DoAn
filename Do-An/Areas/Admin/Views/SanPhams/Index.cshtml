@@ -1,0 +1,222 @@
+﻿@model PagedList.IPagedList<WebApplication17.Models.SanPham>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/sanphams" class="nav-link">Sản phẩm</a>
+        </li>
+    </ul>
+
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                <i class="fas fa-search"></i>
+            </a>
+            <div class="navbar-search-block">
+                <form class="form-inline" action="/admin/sanphams/index" method="post">
+                    <div class="input-group input-group-sm">
+                        <input class="form-control form-control-navbar" name="search" value="@ViewBag.CurrentFilter" placeholder="Từ khóa tìm kiếm" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="far fa-comments"></i>
+                <span class="badge badge-danger navbar-badge">3</span>
+            </a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="far fa-bell"></i>
+                <span class="badge badge-warning navbar-badge">15</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <i class="fas fa-expand-arrows-alt"></i>
+            </a>
+        </li>
+    </ul>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/Admin/Home">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý sản phẩm</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title" style="padding-right:20px"><b>Danh sách sản phẩm</b></h3>
+
+            <div class="card-tools">
+
+                <a href="/admin/sanphams/create" class="btn btn-primary">Thêm mới</a>
+            </div>
+            <form method="get" action="/admin/sanphams/index" class="form-inline mb-3">
+                <select name="hangName" class="form-control mr-2">
+                    <option value="">-- Chọn hãng --</option>
+                    @foreach (var hang in ViewBag.HangList as SelectList)
+                    {
+                        <option value="@hang.Value" @(hang.Value == ViewBag.SelectedHang ? "selected" : "")>
+                            @hang.Text
+                        </option>
+                    }
+                </select>
+
+                <div class="form-check mr-2">
+                    <input type="checkbox" class="form-check-input" id="hotDealCheck" name="isHotDeal" value="true"
+                           @(ViewBag.IsHotDeal == true ? "checked" : "") />
+                    <label class="form-check-label" for="hotDealCheck">Hot Deal</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary mr-2">
+                    <i class="fas fa-search"></i>
+                </button>
+                <a href="/admin/sanphams/index" class="btn btn-secondary">
+                    <i class="fas fa-sync"></i>
+                </a>
+            </form>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover text-center">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Hình ảnh</th>
+                        <th style="width:25%">Tên SP</th>
+                        <th>Hãng</th>
+                        <th>Giá bán</th>
+                        <th>Số lượng</th>
+                        <th>Trạng thái</th>
+                        <th>Thực hiện</th>
+                    </tr>
+                </thead>
+                @if (Model != null && Model.Any())
+                {
+                    var i = 1;                  
+                    foreach (var item in Model)
+                    {
+                        // lấy ảnh đầu tiên trong chuỗi hinhanh
+                        string firstImg = "noimage.jpg";
+                        if (!string.IsNullOrEmpty(item.hinhanh))
+                        {
+                            var imgs = item.hinhanh.Split(';');
+                            firstImg = imgs.Length > 0 ? imgs[0] : "noimage.jpg";
+                        }
+
+                        <tr>
+                            <td>
+                                @i <br />
+                                <small style="color:gray">#@item.masp</small> <!-- hiển thị mã sản phẩm -->
+                            </td>
+                            <td>
+                                <img src="@Url.Content("~/wwwroot/images/" + firstImg)"
+                                     class="img-rounded" width="100" height="100" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.tensp)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HangSP.tenhang)
+                            </td>
+                            <td>
+                                @(item.giaban?.ToString("#,##0") + " đ")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.soluong)
+                            </td>
+                            <td>
+                                @(item.trangthai == true ? "Hiện" : "Ẩn")
+                            </td>
+                            <td>
+                                <a href="/admin/sanphams/details/@item.masp" class="btn btn-dark">Chi tiết</a>
+                                <a href="/admin/sanphams/edit/@item.masp" class="btn btn-primary">Sửa</a>
+                                <input type="button" data-product-id="@item.masp" value="Xóa" class="delete btn btn-danger" />
+                            </td>
+                        </tr>
+                        i++;
+                    }
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">Không có bản ghi nào!!!</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+    <div class="text-center">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    </div>
+</section>
+
+
+<script>
+$(document).ready(function() {
+    $('.delete').click(function() {
+        var productId = $(this).data('product-id');
+
+        // Hiển thị cửa sổ xác nhận
+        if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
+            // Gửi yêu cầu xóa sản phẩm bằng AJAX
+            $.ajax({
+                url: '@Url.Action("DeleteConfirmed", "SanPhams")',
+                type: 'POST',
+                data: { id: productId },
+                success: function(result) {
+                    if (result.success) {
+                        // Xử lý khi xóa thành công, ví dụ hiển thị thông báo, cập nhật giao diện, v.v.
+                        alert('Xóa sản phẩm thành công!');
+                        window.location.reload(); // Tải lại trang
+                    } else {
+                        // Xử lý khi xóa thất bại
+                        alert('Xóa sản phẩm thất bại!');
+                    }
+                },
+                error: function() {
+                    // Xử lý khi có lỗi xảy ra trong quá trình gửi yêu cầu
+                    alert('Đã xảy ra lỗi!');
+                }
+            });
+        }
+    });
+});
+</script>
+
+

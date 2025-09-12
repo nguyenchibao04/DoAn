@@ -1,0 +1,190 @@
+﻿@model WebApplication17.Models.DonHang
+@using WebApplication17.Models
+
+@{
+    ViewBag.Title = "ChiTietDonHang";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var dsDHCT = (List<DonHangChiTiet>)ViewBag.DHCT;
+    decimal total = 0;
+    decimal phiVC = ViewBag.PhiVanChuyen != null ? (decimal)ViewBag.PhiVanChuyen : 0;
+}
+
+<main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="~/DonHangs/Index">Đơn Hàng</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Chi Tiết Đơn Hàng</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="checkout">
+            <div class="container">
+                <div class="row">
+                    <aside class="col-lg-12">
+                        <div class="summary">
+                            <h4>Chi Tiết Hóa Đơn</h4>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label><b>Họ Tên Người Mua:</b> @Html.DisplayFor(m => m.KhachHang.hoten)</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label><b>Số Điện Thoại:</b> @Html.DisplayFor(m => m.dienthoai)</label>
+                                </div>
+                            </div>
+
+                            <label class="mt-1"><b>Địa Chỉ:</b> @Html.DisplayFor(m => m.diachi)</label>
+
+                            <div class="row mt-1">
+                                <div class="col-sm-6">
+                                    <label><b>Ngày Đặt:</b> @Model.ngaydat.ToString("dd/MM/yyyy")</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label><b>Ngày Nhận Dự Kiến:</b> @Model.ngaynhan.ToString("dd/MM/yyyy")</label>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row mt-1">
+                                <div class="col-sm-6">
+                                    <label><b>Hình Thức Thanh Toán:</b> @Html.DisplayFor(m => m.thanhtoan)</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>
+                                        <b>Phí Vận Chuyển:</b>  @if (phiVC > 0)
+                                        {
+                                            @(phiVC.ToString("#,##0") + " đ")
+                                        }
+                                        else
+                                        {
+                                            @:Miễn phí
+                                        }
+                                    </label>
+                                </div>
+                            </div>
+
+
+
+
+                            <h2 class="checkout-title mt-2 mb-2">Sản Phẩm Mua:</h2>
+
+                            <table class="table table-summary">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>STT</th>
+                                        <th></th>
+                                        <th>Sản Phẩm</th>
+                                        <th>Model</th>
+                                        <th>Số Lượng</th>
+                                        <th>Thành Tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (dsDHCT != null && dsDHCT.Any())
+                                    {
+                                        int i = 1;
+                                        foreach (var item in dsDHCT)
+                                        {
+                                            decimal gia = item.gia ?? 0; //  giá thực tế đã lưu (đã cộng option RAM, SSD)
+                                            int soluong = item.soluong ?? 0;
+                                            decimal thanhtien = gia * soluong;
+                                            total += thanhtien;
+
+                                            <tr class="text-center">
+                                                <td>@i</td>
+                                                <td></td>
+                                                <td class="text-left">
+                                                    <div>@item.SanPham.tensp</div>
+
+
+                                                    @if (!string.IsNullOrEmpty(item.CauHinhThem))
+                                                    {
+                                                        <div style="font-size:13px; color:gray; margin-top:4px;">
+                                                            @item.CauHinhThem
+                                                        </div>
+                                                    }
+                                                </td>
+                                                <td>@item.SanPham.model</td>
+                                                <td>@soluong</td>
+                                                <td>@thanhtien.ToString("#,##0") đ</td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+
+
+                            <h2 class="checkout-title total-col mt-5 mb-5">
+                                Tổng Hóa Đơn:
+                                <span class="text-primary">@((total + phiVC).ToString("#,##0")) đ</span>
+                            </h2>
+
+                            @* Nút hành động theo trạng thái *@
+                            @switch (Model.trangthai)
+                            {
+                                case TrangThaiDonHang.ChoXacNhan:
+                                    <button class="btn btn-warning">Chờ xác nhận</button>
+                                    break;
+                                case TrangThaiDonHang.DaThanhToan:
+                                    <button class="btn btn-info">Đã thanh toán</button>
+                                    break;
+                                case TrangThaiDonHang.DangGiao:
+                                    <button class="btn btn-primary">Đang giao</button>
+                                    break;
+                                case TrangThaiDonHang.DaGiao:
+                                    <button class="btn btn-success">Đã giao</button>
+                                    break;
+                                case TrangThaiDonHang.DaHuy:
+                                    <button class="btn btn-danger">Đã hủy</button>
+                                    break;
+                            }
+
+
+                        <div class="mt-3">
+                            @if (Model.trangthai == TrangThaiDonHang.ChoXacNhan
+|| Model.trangthai == TrangThaiDonHang.DaThanhToan)
+                            {
+                                <button class="btn btn-danger" id="btnCancelOrder" data-id="@Model.madonhang">
+                                    Hủy đơn hàng
+                                </button>
+                            }
+                        </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    $(document).ready(function () {
+        $('#btnCancelOrder').click(function () {
+            var idOrder = $(this).data('id');
+            if (!confirm("Bạn có chắc muốn hủy đơn này không?")) return;
+
+            $.ajax({
+                url: '@Url.Action("Huy", "DonHangs")',
+                type: 'POST',
+                data: { id: idOrder },
+                success: function (result) {
+                    if (result.success) {
+                        alert("Hủy đơn thành công!");
+                        location.reload(); // reload trang để cập nhật trạng thái
+                    } else {
+                        alert(result.message || "Có lỗi xảy ra!");
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra!");
+                }
+            });
+        });
+    });
+</script>

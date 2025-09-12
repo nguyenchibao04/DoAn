@@ -1,0 +1,375 @@
+﻿html, body {
+    font-family: 'Font Sans-serif', Tahoma, Arial, sans-serif;
+    line-height: 1.6; /* khoảng cách dòng dễ đọc */
+    color: #333; /* màu chữ mặc định */
+}
+
+.category-dropdown .side-nav ul li a {
+    font-weight: 600; /* Đậm hơn mặc định */
+    
+}
+
+   
+
+
+
+.page-item.disabled .page-link {
+    opacity: 1 !important; /* không mờ */
+    color: #007bff !important; /* màu chữ */
+    cursor: pointer !important; /* cho hover bình thường */
+}
+
+.nav-pills .nav-link {
+    font-size: 13px !important; /* chữ nhỏ lại */
+    padding: 4px 10px !important; /* thu gọn khoảng cách */
+}
+
+.nav-pills .nav-item {
+    margin-right: 6px !important; /* khoảng cách giữa các tab */
+}
+
+
+
+label.form-label {
+    font-weight: 500 !important; /* 700 = bold */
+    color: #333 !important; /* màu chữ tùy ý */
+}
+
+
+
+
+
+form input,
+form textarea,
+form select {
+    font-weight: 450 !important;
+    color: #333 !important;
+}
+
+
+/* Viền đỏ cho toàn bộ khung Hot Deals */
+.hot-deals-carousel {
+    border: 2px solid red; /* Viền đỏ, dày 2px */
+    padding: 10px; /* Khoảng cách giữa viền và nội dung */
+    border-radius: 8px; /* Bo tròn viền, tùy chọn */
+}
+
+/* Nếu muốn viền từng sản phẩm riêng lẻ */
+.hot-deal-product {
+    border: 1px solid red;
+    border-radius: 6px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+
+
+/* Slider container căn giữa, lệch phải 65px */
+.intro-slider-container {
+    max-width: 760px; /* độ rộng tối đa */
+    margin: 0 auto; /* căn giữa */
+    padding: 0 15px;
+    position: relative;
+    left: 65px; /* giữ nguyên lệch sang phải */
+}
+
+/* Slide (ảnh nền) */
+.intro-slide {
+    height: 400px; /* chiều cao slider */
+    background-size: contain; /* giữ nguyên tỉ lệ ảnh */
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 8px; /* bo tròn nhẹ */
+}
+
+/* Nút điều hướng owl carousel */
+.owl-nav {
+    top: 50%;
+    width: 105%; /* hơi rộng hơn slider để nút ra ngoài một chút */
+    position: absolute;
+    pointer-events: none; /* tránh chặn click vào slide */
+}
+
+    .owl-nav button {
+        pointer-events: all;
+        position: absolute;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.3);
+        color: #fff;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .owl-nav .owl-prev {
+        left: 0;
+    }
+
+    .owl-nav .owl-next {
+        right: 0;
+    }
+
+/* Ảnh bên phải slider (nếu có) */
+.right-banners {
+    position: absolute;
+    right: 20px;
+    top: 210px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  
+}
+
+    .right-banners img {
+        height:auto;
+        width:300px;
+        border-radius: 6px;
+    }
+
+    /* Hiệu ứng ánh sáng */
+    .right-banners .banner::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -75%; /* bắt đầu ngoài khung */
+        width: 50%;
+        height: 100%;
+        background: linear-gradient( 120deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100% );
+        transform: skewX(-25deg);
+    }
+
+    /* Khi hover thì ánh sáng chạy qua */
+    .right-banners .banner:hover::after {
+        animation: shine 0.9s ease;
+    }
+
+@keyframes shine {
+    0% {
+        left: -75%;
+    }
+
+    100% {
+        left: 125%;
+    }
+}
+/* Responsive */
+@media (max-width: 800px) {
+    .intro-slide {
+        height: 250px; /* slider thấp hơn trên màn nhỏ */
+    }
+
+    .owl-nav button {
+        width: 30px;
+        height: 30px;
+    }
+
+    .right-banners {
+        display: none !important;
+    }
+}
+
+
+
+
+
+.product-img-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+    .product-img-wrapper img {
+        width: 100%;
+        display: block;
+        transition: transform 0.6s ease, opacity 0.6s ease;
+    }
+
+    /* Ảnh hover nằm chồng lên ảnh chính, ẩn đi */
+    .product-img-wrapper .img-hover {
+        position: absolute;
+        top: 0;
+        left: 100%; /* ban đầu nằm ngoài khung, bên phải */
+        opacity: 0;
+    }
+
+    /* Khi hover: ảnh chính trượt sang trái, ảnh hover trượt vào */
+    .product-img-wrapper:hover .img-default {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    .product-img-wrapper:hover .img-hover {
+        left: 0;
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+
+
+#product-zoom {
+    transition: opacity 0.3s ease-in-out;
+}
+
+
+
+.container-news {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 15px;
+}
+
+
+.page-title {
+    font-size: 36px;
+    font-weight: 300;
+    margin-bottom: 24px;
+    color: #222;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.news-item {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+}
+
+
+.news-thumb {
+    flex: 0 0 320px; /* width ảnh cố định */
+    max-width: 320px;
+}
+
+
+    .news-thumb img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 6px;
+        display: block;
+    }
+
+
+.news-main {
+    flex: 1;
+}
+
+
+.news-category {
+    color: #9aa1a6;
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+
+.container-news {
+    padding-bottom: 40px;
+}
+
+
+
+
+
+.news-detail {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    line-height: 1.8;
+    font-size: 16px;
+    color: #333;
+}
+
+.news-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.news-meta {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.news-image {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+    .news-image img {
+        max-width: 100%;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+.news-content {
+    font-size: 16px;
+    color: #333;
+}
+
+    .news-content p {
+        margin-bottom: 15px;
+    }
+
+
+
+
+main {
+    font-family: Arial, Helvetica, sans-serif; /* đổi font chữ */
+    line-height: 1.7; /* giãn dòng cho dễ đọc */
+    color: #333; /* màu chữ dịu hơn */
+    font-size: 16px; /* cỡ chữ chuẩn */
+}
+
+    main h2 {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    main h5 {
+        margin-top: 25px;
+        font-size: 20px;
+        color: #222;
+        font-weight: 600;
+    }
+
+    main p, main ul li {
+        margin-bottom: 12px;
+    }
+
+    main ul {
+        padding-left: 20px;
+    }
+
+        main ul li {
+            list-style-type: disc;
+        }
+
+
+/*New*/
+
+
+.donhangchitiet {
+    font-weight: normal;
+    color: #333;
+    text-decoration: none;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+    .donhangchitiet:hover {
+        font-weight: bold; /* chữ đậm */
+        background-color: #f0c040; /* màu vàng nhẹ khi hover */
+        color: #000; /* chữ đen nổi bật */
+    }

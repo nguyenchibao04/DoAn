@@ -1,0 +1,152 @@
+﻿@model WebApplication17.Models.DonHang
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var dsDHCT = (List<WebApplication17.Models.DonHangChiTiet>)ViewBag.DHCT;
+    decimal total = 0;
+
+    // Lấy phí vận chuyển đã lưu trong DonHang (đúng theo tỉnh/thành phố)
+    decimal phiVC = Model.phivanchuyen ?? 0;
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/donhangs" class="nav-link">Đơn hàng</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <!-- Navbar Search và thông báo giữ nguyên -->
+    </ul>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/Admin/donhangs">Quản lý đơn hàng</a></li>
+                    <li class="breadcrumb-item active">Chi tiết</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="card">
+        <div class="card-header">
+            <h3><b>Chi Tiết Đơn Hàng #@Model.madonhang</b></h3>
+        </div>
+
+        <!-- Thông tin người nhận -->
+        <div class="card-header">
+            <h3 class="card-title"><b>Thông tin người nhận:</b></h3>
+        </div>
+        <div class="card-body">
+            <table style="width: 1100px;">
+                <tr>
+                    <td><h5><b>Họ tên người nhận:</b></h5></td>
+                    <td><h5>@Html.DisplayFor(model => model.KhachHang.hoten)</h5></td>
+                    <td style="width: 20px;"></td>
+                    <td><h5><b>Ngày đặt:</b></h5></td>
+                    <td><h5>@Model.ngaydat.ToString("dd/MM/yyyy")</h5></td>
+                </tr>
+                <tr>
+                    <td><h5><b>Số điện thoại:</b></h5></td>
+                    <td><h5>@Html.DisplayFor(model => model.dienthoai)</h5></td>
+                    <td></td>
+                    <td><h5><b>Ngày nhận:</b></h5></td>
+                    <td><h5>@Model.ngaynhan.ToString("dd/MM/yyyy")</h5></td>
+                </tr>
+                <tr>
+                    <td><h5><b>Địa chỉ:</b></h5></td>
+                    <td><h5>@Html.DisplayFor(model => model.diachi)</h5></td>
+                    <td></td>
+                    <td><h5><b>Hình thức thanh toán:</b></h5></td>
+                    <td><h5>@Html.DisplayFor(model => model.thanhtoan)</h5></td>
+                    <td>
+                        <h5 class="checkout-title mt-1">
+                            <b>Phí Vận Chuyển:</b>
+                            @if (phiVC > 0)
+                            {
+                                @(phiVC.ToString("#,##0") + "đ")
+                            }
+                            else
+                            {
+                                @:Miễn phí
+                            }
+                        </h5>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Danh sách mặt hàng -->
+        <div class="card-header">
+            <h3 class="card-title"><b>Danh sách các mặt hàng:</b></h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-summary">
+                <thead>
+                    <tr class="text-center">
+                        <th>STT</th>
+                        <th></th>
+                        <th>Sản Phẩm</th>
+                        <th>Model</th>
+                        <th>Số Lượng</th>
+                        <th>Thành Tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (dsDHCT != null && dsDHCT.Any())
+                    {
+                        int i = 1;
+                        foreach (var item in dsDHCT)
+                        {
+                            decimal gia = item.gia ?? 0;
+                            int soluong = item.soluong ?? 0;
+                            decimal thanhtien = gia * soluong;
+                            total += thanhtien;
+
+                            <tr class="text-center">
+                                <td>@i</td>
+                                <td></td>
+                                <td class="text-left">
+                                    <div>@item.SanPham.tensp</div>
+                                    @if (!string.IsNullOrEmpty(item.CauHinhThem))
+                                    {
+                                        <div style="font-size:13px; color:gray; margin-top:4px;">
+                                            @item.CauHinhThem
+                                        </div>
+                                    }
+                                </td>
+                                <td>@item.SanPham.model</td>
+                                <td>@soluong</td>
+                                <td>@thanhtien.ToString("#,##0") đ</td>
+                            </tr>
+                            i++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <h4 class="checkout-title total-col mt-6 mb-5">
+            <b style="margin-left:15px">Tổng Hóa Đơn:</b>
+            <span class="text-primary">@((total + phiVC).ToString("#,##0")) đ</span>
+        </h4>
+
+        <div class="card-footer">
+            <a style="width: 100px;" class="btn btn-danger" href="/admin/donhangs">Quay lại</a>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,146 @@
+﻿@model WebApplication17.Models.KhachHang
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/admin/khachhangs" class="nav-link">Tài khoản</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="#" class="nav-link">Thêm mới</a>
+        </li>
+    </ul>
+}
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/admin/khachhangs">Quản ly tài khoản</a></li>
+                    <li class="breadcrumb-item active">Thêm mới</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Thông tin tài khoản thêm mới</h3>
+
+        </div>
+        <div class="card-body">
+            <div class="bs-stepper-content">
+                @using (Html.BeginForm("Create", "Khachhangs", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Họ tên</label>
+                            @Html.TextBoxFor(x => x.hoten, new { @class = "form-control", @placeholder = "Họ và tên" })
+                            @Html.ValidationMessageFor(x => x.hoten, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Địa chỉ</label>
+                            @Html.TextBoxFor(x => x.diachi, new { @class = "form-control", @placeholder = "Địa chỉ" })
+                            @Html.ValidationMessageFor(x => x.diachi, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Điện thoại</label>
+                            @Html.TextBoxFor(x => x.dienthoai, new { @class = "form-control", @placeholder = "Điện thoại" })
+                            @Html.ValidationMessageFor(x => x.dienthoai, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email</label>
+                            @Html.TextBoxFor(x => x.email, new { @class = "form-control", @placeholder = "Email" })
+                            @Html.ValidationMessageFor(x => x.email, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="matkhau">Mật khẩu</label>
+                            <div class="input-group">
+                                @Html.PasswordFor(x => x.matkhau, new { @class = "form-control", @id = "matkhau", @placeholder = "Mật khẩu" })
+                                <div class="input-group-append">
+                                    <span class="input-group-text" onclick="togglePassword('matkhau', this)">
+                                        <i class="fa fa-eye"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(x => x.matkhau, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Xác nhận mật khẩu</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Xác nhận mật khẩu" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text" onclick="togglePassword('confirmPassword', this)">
+                                        <i class="fa fa-eye"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <span class="text-danger" id="confirmPasswordError"></span>
+                        </div>
+                    </div>
+                    <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
+                        <a href="/admin/khachhangs" class="btn btn-danger">Quay lại</a>
+                        <input type="submit" class="btn btn-primary float-right" value="Thêm mới">
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</section>
+<script>
+    function togglePassword(fieldId, el) {
+        var input = document.getElementById(fieldId);
+        var icon = el.querySelector("i");
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+
+    // Kiểm tra xác nhận mật khẩu khi submit
+    document.querySelector("form").addEventListener("submit", function (e) {
+        var password = document.getElementById("matkhau").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+        var errorSpan = document.getElementById("confirmPasswordError");
+
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            errorSpan.innerText = "Mật khẩu xác nhận không khớp";
+        } else {
+            errorSpan.innerText = "";
+        }
+    });
+</script>

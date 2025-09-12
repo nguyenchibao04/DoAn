@@ -1,0 +1,469 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    List<WebApplication17.Models.SanPham> ds = ViewBag.sale;   // Hot Deals
+    List<WebApplication17.Models.SanPham> dsnew = ViewBag.dsnew;
+    List<WebApplication17.Models.SanPham> dspc = ViewBag.dspc;// Sản phẩm mới
+    List<WebApplication17.Models.SanPham> dspc1 = ViewBag.dspc1;
+    List<WebApplication17.Models.TinTuc> dstintuc = ViewBag.dstintuc;
+}
+
+<main class="main">
+    <div class="slider-wrapper">
+        <!-- Slider -->
+        <div class="intro-slider-container">
+            <div class="intro-slider owl-carousel owl-simple owl-nav-inside"
+                 data-toggle="owl"
+                 data-owl-options='{
+                "autoplay": true,
+                "autoplayTimeout": 10000,
+                "autoplayHoverPause": true,
+                "nav": true,
+                "dots": false,
+                "loop": true,
+                "responsive": {
+                    "0": { "items":1 },
+                    "768": { "items":1 },
+                    "992": { "items":1 }
+                }
+             }'>
+                <div class="intro-slide" style="background-image: url(/wwwroot/images/slide_1_img.jpg);"></div>
+                <div class="intro-slide" style="background-image: url(/wwwroot/images/slide_2_img.jpg);"></div>
+                <div class="intro-slide" style="background-image: url(/wwwroot/images/slide_4_img.jpg);"></div>
+            </div>
+            <span class="slider-loader"></span>
+        </div>
+
+        <!-- Ảnh bên phải -->
+        <div class="right-banners">
+            <a class="banner" href="@Url.Action("Index", "SanPhams", new { category = "12" })">
+                <img src="~/wwwroot/images/bannertop1.jpg" alt="banner1">
+            </a>
+            <a class="banner" href="@Url.Action("Index", "SanPhams", new { category = "15" })">
+                <img src="~/wwwroot/images/bannertop2.jpg" alt="banner2">
+            </a>
+            <a class="banner" href="@Url.Action("Index", "SanPhams", new { category = "13" })">
+                <img src="~/wwwroot/images/bannertop3.jpg" alt="banner3">
+            </a>
+        </div>
+    </div>
+
+
+
+
+    <!-- Hot Deals -->
+    <div class="bg-light pt-3 pb-5">
+        <div class="container">
+            <div class="heading heading-flex heading-border mb-3">
+                <div class="heading-left">
+                    <h2 class="title">Hot Deals</h2>
+                </div>
+            </div>
+
+            <!-- TOP SẢN PHẨM BÁN CHẠY -->
+            <div style="background-color: #d2001a; border-radius: 10px; padding: 20px; margin-top:30px;">
+                <div class="heading heading-flex heading-border mb-3" style="margin-bottom: 20px;">
+                    <div class="heading-left" style="text-align:center; width:100%;">
+                        <h2 class="title" style="color: #fff; font-weight: bold;">
+                            🔥 SALE SẬP SÀN🔥
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Giữ nguyên code cũ -->
+                <div class="tab-content tab-content-carousel">
+                    <div class="tab-pane p-0 fade show active" id="hot-all-tab" role="tabpanel">
+                        <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow"
+                             data-toggle="owl"
+                             data-owl-options='{
+                    "nav": false,
+                    "dots": true,
+                    "margin": 20,
+                    "loop": false,
+                    "responsive": {
+                        "0": { "items":2 },
+                        "480": { "items":2 },
+                        "768": { "items":3 },
+                        "992": { "items":4 },
+                        "1280": { "items":5, "nav": true }
+                    }
+                }'>
+
+                            @if (ds != null && ds.Any())
+                            {
+                                foreach (var item in ds)
+                                {
+                                    <!-- GIỮ NGUYÊN code sản phẩm của bạn ở đây -->
+                            <div class="product">
+                                <figure class="product-media">
+                                    <a href="~/SanPhams/Details/@item.masp">
+                                        @{
+                                            string[] imgs = new string[] { };
+                                            if (!string.IsNullOrEmpty(item.hinhanh))
+                                            {
+                                                imgs = item.hinhanh.Split(';');
+                                            }
+
+                                            string firstImg = imgs.Length > 0 ? imgs[0] : "noimage.jpg";
+                                            string secondImg = imgs.Length > 1 ? imgs[1] : firstImg; // nếu không có ảnh 2 thì dùng lại ảnh 1
+                                        }
+
+                                        <div class="product-img-wrapper">
+                                            <img src="@Url.Content("~/wwwroot/images/" + firstImg)"
+                                                 alt="Product image"
+                                                 class="product-image img-default" />
+                                            <img src="@Url.Content("~/wwwroot/images/" + secondImg)"
+                                                 alt="Product hover image"
+                                                 class="product-image img-hover" />
+                                        </div>
+                                    </a>
+
+                                    <div class="product-action">
+                                        <button id="addcart" data-product-id="@item.masp" class="btn-product btn-cart" title="Add to cart">
+                                            <span>Thêm vào giỏ</span>
+                                        </button>
+                                    </div>
+                                </figure>
+
+                                <div class="product-body">
+                                    <h3 class="product-title">
+                                        <a href="~/SanPhams/Details/@item.masp">@item.tensp</a>
+                                    </h3>
+                                    <h class="font-weight-light line-through" >
+                                        @{
+                                            decimal giagoc = (decimal)item.giaban;
+                                            decimal giaban = giagoc - (giagoc * 10 / 100);
+                                            string formattedPrice = giaban.ToString("#,##0");
+                                            string formatGiagoc = giagoc.ToString("#,##0");
+                                        }
+                                        @formatGiagoc đ
+                                    </h>
+                                    <div class="product-price" style="color:red;font-weight:bold">
+                                        @formattedPrice đ
+                                    </div>
+                                </div>
+                            </div>
+                                }
+                            }
+                            else
+                            {
+                                <p>Hiện đang không có sản phẩm</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <!-- End giữ nguyên -->
+            </div>
+
+        </div>
+
+        <div class="mb-3"></div>
+
+        <!-- Sản phẩm mới -->
+        <div class="container electronics" style="margin-bottom: 50px;margin-top:100px;">
+            <div class="heading heading-flex heading-border mb-3">
+                <div class="heading-left">
+                    <h2 class="title">Sản Phẩm Mới</h2>
+                </div>
+            </div>
+
+            <div class="tab-content tab-content-carousel">
+                <div class="tab-pane p-0 fade show active" id="elec-new-tab" role="tabpanel">
+                    <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
+                         data-owl-options='{
+                            "nav": false,
+                            "dots": true,
+                            "margin": 20,
+                            "loop": false,
+                            "responsive": {
+                                "0": { "items":2 },
+                                "480": { "items":2 },
+                                "768": { "items":3 },
+                                "992": { "items":4 },
+                                "1280": { "items":5, "nav": true }
+                            }
+                        }'>
+                        @if (dsnew != null && dsnew.Any())
+                        {
+                            foreach (var item in dsnew)
+                            {
+                                <div class="product">
+                                    <figure class="product-media">
+                                        <a href="~/SanPhams/Details/@item.masp">
+                                            @{
+                                                string[] imgs = new string[] { };
+                                                if (!string.IsNullOrEmpty(item.hinhanh))
+                                                {
+                                                    imgs = item.hinhanh.Split(';');
+                                                }
+
+                                                string firstImg = imgs.Length > 0 ? imgs[0] : "noimage.jpg";
+                                                string secondImg = imgs.Length > 1 ? imgs[1] : firstImg; // nếu không có ảnh 2 thì dùng lại ảnh 1
+                                            }
+
+                                            <div class="product-img-wrapper">
+                                                <img src="@Url.Content("~/wwwroot/images/" + firstImg)"
+                                                     alt="Product image"
+                                                     class="product-image img-default" />
+                                                <img src="@Url.Content("~/wwwroot/images/" + secondImg)"
+                                                     alt="Product hover image"
+                                                     class="product-image img-hover" />
+                                            </div>
+                                        </a>
+
+                                        <div class="product-action">
+                                            <button id="addcart" data-product-id="@item.masp" class="btn-product btn-cart" title="Add to cart">
+                                                <span>Thêm vào giỏ</span>
+                                            </button>
+                                        </div>
+                                    </figure>
+                                    <div class="product-body">
+                                        <h3 class="product-title"><a href="~/SanPhams/Details/@item.masp">@item.tensp</a></h3>
+                                        <div class="product-price" style="color:red;font-weight:bold">
+                                            @{
+                                                decimal giaban = (decimal)item.giaban;
+                                                string formattedPrice = giaban.ToString("#,##0");
+                                            }
+                                            @formattedPrice đ
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p>Không có sản phẩm mới.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container electronics" style="margin-bottom: 100px;">
+            <div class="heading heading-flex heading-border mb-3">
+                <div class="heading-left">
+                    <h2 class="title">PC Cao Cấp</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Banner bên trái -->
+                <div class="col-md-3 d-none d-md-block">
+                    <img src="~/wwwroot/images/pcwork2.jpg"
+                         alt="Banner PC Cao Cấp"
+                         style="width:100%; height:600px; border-radius:8px;" />
+                </div>
+
+                <!-- Carousel sản phẩm bên phải -->
+                <div class="col-md-9">
+                    <div class="tab-content tab-content-carousel">
+                        <div class="tab-pane p-0 fade show active" id="pc-highend-tab" role="tabpanel">
+                            <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow"
+                                 data-toggle="owl"
+                                 data-owl-options='{
+                            "nav": false,
+                            "dots": true,
+                            "margin": 20,
+                            "loop": false,
+                            "responsive": {
+                                "0": { "items":2 },
+                                "480": { "items":2 },
+                                "768": { "items":3 },
+                                "992": { "items":3 },
+                                "1280": { "items":4, "nav": true }
+                            }
+                         }'>
+                                @if (dspc != null && dspc.Any())
+                                {
+                                    foreach (var item in dspc)
+                                    {
+                                        <div class="product">
+                                            <figure class="product-media">
+                                                <a href="~/SanPhams/Details/@item.masp">
+                                                    @{
+                                                        string[] imgs = new string[] { };
+                                                        if (!string.IsNullOrEmpty(item.hinhanh))
+                                                        {
+                                                            imgs = item.hinhanh.Split(';');
+                                                        }
+
+                                                        string firstImg = imgs.Length > 0 ? imgs[0] : "noimage.jpg";
+                                                        string secondImg = imgs.Length > 1 ? imgs[1] : firstImg; // nếu không có ảnh 2 thì dùng lại ảnh 1
+                                                    }
+
+                                                    <div class="product-img-wrapper">
+                                                        <img src="@Url.Content("~/wwwroot/images/" + firstImg)"
+                                                             alt="Product image"
+                                                             class="product-image img-default" />
+                                                        <img src="@Url.Content("~/wwwroot/images/" + secondImg)"
+                                                             alt="Product hover image"
+                                                             class="product-image img-hover" />
+                                                    </div>
+                                                </a>
+
+                                                <div class="product-action">
+                                                    <button id="addcart" data-product-id="@item.masp" class="btn-product btn-cart" title="Add to cart">
+                                                        <span>Thêm vào giỏ</span>
+                                                    </button>
+                                                </div>
+                                            </figure>
+                                            <div class="product-body">
+                                                <h3 class="product-title">
+                                                    <a href="~/SanPhams/Details/@item.masp">@item.tensp</a>
+                                                </h3>
+                                                <div class="product-price" style="color:red;font-weight:bold">
+                                                    @(((decimal)item.giaban).ToString("#,##0")) đ
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>Không có sản phẩm PC Cao Cấp.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container electronics" style="margin-bottom: 100px;">
+            <div class="heading heading-flex heading-border mb-3">
+                <div class="heading-left">
+                    <h2 class="title">PC CORE ULTRA</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Banner bên trái -->
+                <div class="col-md-3 d-none d-md-block">
+                    <img src="~/wwwroot/images/pcwork.jpg"
+                         alt="Banner PC CORE ULTRA"
+                         style="width:100%; height:600px; border-radius:8px;" />
+                </div>
+
+                <!-- Carousel sản phẩm bên phải -->
+                <div class="col-md-9">
+                    <div class="tab-content tab-content-carousel">
+                        <div class="tab-pane p-0 fade show active" id="pc-highend-tab" role="tabpanel">
+                            <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow"
+                                 data-toggle="owl"
+                                 data-owl-options='{
+                            "nav": false,
+                            "dots": true,
+                            "margin": 20,
+                            "loop": false,
+                            "responsive": {
+                                "0": { "items":2 },
+                                "480": { "items":2 },
+                                "768": { "items":3 },
+                                "992": { "items":3 },
+                                "1280": { "items":4, "nav": true }
+                            }
+                         }'>
+                                @if (dspc1 != null && dspc1.Any())
+                                {
+                                    foreach (var item in dspc1)
+                                    {
+                                        <div class="product">
+                                            <figure class="product-media">
+                                                <a href="~/SanPhams/Details/@item.masp">
+                                                    @{
+                                                        string[] imgs = new string[] { };
+                                                        if (!string.IsNullOrEmpty(item.hinhanh))
+                                                        {
+                                                            imgs = item.hinhanh.Split(';');
+                                                        }
+
+                                                        string firstImg = imgs.Length > 0 ? imgs[0] : "noimage.jpg";
+                                                        string secondImg = imgs.Length > 1 ? imgs[1] : firstImg; // nếu không có ảnh 2 thì dùng lại ảnh 1
+                                                    }
+
+                                                    <div class="product-img-wrapper">
+                                                        <img src="@Url.Content("~/wwwroot/images/" + firstImg)"
+                                                             alt="Product image"
+                                                             class="product-image img-default" />
+                                                        <img src="@Url.Content("~/wwwroot/images/" + secondImg)"
+                                                             alt="Product hover image"
+                                                             class="product-image img-hover" />
+                                                    </div>
+                                                </a>
+
+                                                <div class="product-action">
+                                                    <button id="addcart" data-product-id="@item.masp" class="btn-product btn-cart" title="Add to cart">
+                                                        <span>Thêm vào giỏ</span>
+                                                    </button>
+                                                </div>
+                                            </figure>
+                                            <div class="product-body">
+                                                <h3 class="product-title">
+                                                    <a href="~/SanPhams/Details/@item.masp">@item.tensp</a>
+                                                </h3>
+                                                <div class="product-price" style="color:red;font-weight:bold">
+                                                    @(((decimal)item.giaban).ToString("#,##0")) đ
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>Không có sản phẩm PC CORE ULTRA.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="mb-3"></div>
+
+        <!-- Banner -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="banner banner-overlay banner-overlay-light">
+                        <a href="@Url.Action("TuVanPC", "Home")"><img src="~/wwwroot/images/tuvanpc.jpg" alt="Banner"></a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="banner banner-overlay banner-overlay-light">
+                        <a href="@Url.Action("Index", "SanPhams", new { category = "14" })"><img src="~/wwwroot/images/pcvanphong.jpg" alt="Banner"></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Tin tức -->
+
+</main>
+
+<script>
+    $(document).ready(function() {
+        $('.btn-cart').click(function() {
+            var productId = $(this).data('product-id');
+            $.ajax({
+                url: '@Url.Action("AddToCart", "SanPhams")',
+                type: 'POST',
+                data: { id: productId },
+                success: function(result) {
+                    if (result.success) {
+                        toastr.success("Thêm vào giỏ hàng thành công", "Thành Công");
+                        setTimeout(function () { location.reload(); }, 2000);
+                    } else {
+                        window.location.href = '/Login/Index';
+                    }
+                },
+                error: function() { alert('Đã xảy ra lỗi!'); }
+            });
+        });
+    });
+</script>

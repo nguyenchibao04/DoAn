@@ -1,0 +1,52 @@
+﻿@model IEnumerable<WebApplication17.Models.TinTuc>
+@{
+    ViewBag.Title = "Tin tức";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="news-list-wrapper">
+    <div class="container-news">
+       
+
+
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <div class="news-item">
+                    <div class="news-thumb">
+<img src="@Url.Content("~/wwwroot/tintuc/" + (String.IsNullOrEmpty(item.hinhanh) ? "placeholder.jpg" : item.hinhanh))"
+     alt="@item.tieude" />                    </div>
+
+
+                    <div class="news-main">
+
+                        <h2 class="news-heading">@item.tieude</h2>
+
+
+                        @{
+                            // Bỏ tag HTML
+                            var plain = System.Text.RegularExpressions.Regex.Replace(item.noidung ?? "", "<.*?>", "");
+
+                            // Giải mã các entity HTML (&nbsp;, &aacute; => à, á...)
+                            plain = System.Web.HttpUtility.HtmlDecode(plain);
+
+                            var summary = plain.Length > 180 ? plain.Substring(0, 180) + "..." : plain;
+                        }
+
+
+                        <p class="news-summary">@summary</p>
+
+
+                        <a class="news-readmore" href="@Url.Action("ChiTietTinTuc", "Home", new { id = item.matintuc })">Xem chi tiết</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Chưa có tin tức.</p>
+        }
+    </div>
+</div>

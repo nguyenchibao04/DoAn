@@ -1,0 +1,110 @@
+﻿@model WebApplication17.Models.TinTuc
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/admin/tintucs" class="nav-link">Tin tức</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="#" class="nav-link">Chi tiết</a>
+        </li>
+    </ul>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/admin/tintucs">Quản lý tin tức</a></li>
+                    <li class="breadcrumb-item active">Chi tiết</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><b>Chi tiết tin tức</b></h3>
+            <div class="card-tools">
+                <a href="/admin/tintucs/edit/@Model.matintuc" class="btn btn-primary">Chỉnh sửa</a>
+                <a href="/admin/tintucs" class="btn btn-danger">Quay lại</a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <!-- Hình ảnh bên trái -->
+                <div class="col-sm-5" style="display: flex; justify-content: center; align-items: center;">
+                    <img src="@Url.Content("~/wwwroot/tintuc/" + Model.hinhanh)"
+                         class="img-rounded" width="400" height="300" />
+                </div>
+
+                <!-- Thông tin tin tức bên phải -->
+                <div class="col-sm-7">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h3 class="card-title"><b>Thông tin bài viết</b></h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <td>Tiêu đề</td>
+                                        <td>@Model.tieude</td>
+                                    </tr>
+                                   
+                                    <tr>
+                                        <td>Ngày tạo</td>
+                                        <td>
+                                            @(Model.ngaytao.HasValue ? Model.ngaytao.Value.ToString("dd/MM/yyyy") : "")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Trạng thái</td>
+                                        <td>
+                                            @if (Model.trangthai == true)
+                                            {
+                                                <span class="badge badge-success">Hiển thị</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-secondary">Ẩn</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nội dung chi tiết -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3 class="card-title"><b>Nội dung chi tiết</b></h3>
+                </div>
+                <div class="card-body">
+                    <div style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; max-height: 400px; overflow-y: auto;">
+                        @Html.Raw(Model.noidung)   <!-- Dùng Raw để giữ Unicode + định dạng CKEditor -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

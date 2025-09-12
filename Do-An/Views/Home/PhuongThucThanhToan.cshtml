@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "PhuongThucThanhToan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="container my-5">
+    <div class="card shadow-lg p-4 rounded-3">
+        <h2 class="mb-4">Phương thức thanh toán</h2>
+
+        <h5>1. Thanh toán tại cửa hàng</h5>
+        <ul>
+            <li>Quý khách có thể đến mua hàng và thanh toán trực tiếp bằng tiền mặt.</li>
+            <li>Thanh toán bằng hình thức quẹt thẻ ATM, thẻ tín dụng qua máy POS.</li>
+        </ul>
+
+        <h5>2. Thanh toán khi nhận hàng (COD)</h5>
+        <ul>
+            <li>Quý khách thanh toán tiền mặt cho nhân viên giao hàng khi nhận hàng tại nhà hoặc nơi nhận hàng.</li>
+            <li>Quý khách có thể kiểm tra hàng hóa trước khi thanh toán, nhưng không được mở seal (niêm phong) niềng của sản phẩm gây ảnh hưởng đến tem dán niêm phong, bao bì hay kiểm tra sâu như cắm điện, sạc, ghi chép dữ liệu.</li>
+        </ul>
+
+        <h5>3. Chuyển khoản ngân hàng</h5>
+        <p>
+            Quý khách chuyển khoản với nội dung: <b>DH+ Mã Đơn Hàng (Ví dụ: DH130)</b> theo thông tin tài khoản bên dưới,
+            chúng tôi sẽ gọi điện xác nhận và giao hàng cho quý khách.
+        </p>
+
+        <div class="bank-info border p-3 rounded bg-light">
+            <p><b>Ngân hàng:</b> MbBank Ngân Hàng Quân Đội</p>
+            <p><b>Tên tài khoản:</b> Nguyễn Chí Bảo</p>
+            <p><b>Số tài khoản:</b> <span style="color:red; font-size:18px;">0384387378</span></p>
+
+            <div class="text-center my-3">
+                <img src="~/wwwroot/images/MB-0384384378-print.png" alt="Mã QR thanh toán" class="img-fluid" style="max-width:300px">
+            </div>
+        </div>
+    </div>
+</main>
+ 

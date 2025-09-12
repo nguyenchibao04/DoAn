@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "ReturnVNPay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container mt-5">
+    <h2>Kết quả thanh toán</h2>
+    <div class="alert alert-info">
+        @ViewBag.Message
+    </div>
+    <a href="@Url.Action("Index","DonHangs")" class="btn btn-success">Xem đơn hàng</a>
+    <a href="~/Home" class="btn btn-secondary">Tiếp tục mua sắm</a>
+</div>
+
