@@ -31,18 +31,18 @@ namespace WebApplication17.Controllers
             List<SanPham> ds_new = db.SanPham
                                       .Where(s => s.trangthai == true)
                                       .OrderByDescending(s => s.masp)
-                                      .Take(15)
+                                      .Take(8)
                                       .ToList();
 
             List<SanPham> ds_pc = db.SanPham
-                                      .Where(s => s.trangthai == true && s.mahang == 17)
+                                      .Where(s => s.trangthai == true && s.mahang == 6)
                                       .OrderByDescending(s => s.masp)
-                                      .Take(10)
+                                      .Take(8)
                                       .ToList();
             List<SanPham> ds_pc1 = db.SanPham
-                                      .Where(s => s.trangthai == true && s.mahang == 16)
+                                      .Where(s => s.trangthai == true && s.mahang == 5)
                                       .OrderByDescending(s => s.masp)
-                                      .Take(10)
+                                      .Take(8)
                                       .ToList();
 
             List<HangSP> ds_hang = db.HangSP.ToList();

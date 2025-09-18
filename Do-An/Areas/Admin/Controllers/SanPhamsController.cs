@@ -74,6 +74,7 @@ namespace WebApplication17.Areas.Admin.Controllers
                 new SelectListItem { Value = "false", Text = "Ẩn" }
             };
             ViewBag.TrangThaiList = trangThaiList;
+
             return View();
         }
 
@@ -87,6 +88,8 @@ namespace WebApplication17.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    sanPham.RAM = sanPham.RAM?.Trim().Replace("\u00A0", "");
+                    sanPham.SSD = sanPham.SSD?.Trim().Replace("\u00A0", "");
                     List<string> fileNames = new List<string>();
 
                     // Lặp qua tất cả file upload
@@ -142,6 +145,8 @@ namespace WebApplication17.Areas.Admin.Controllers
                 new SelectListItem { Value = "true", Text = "Hiển thị" },
                 new SelectListItem { Value = "false", Text = "Ẩn" }
             };
+            sanPham.RAM = sanPham.RAM?.Trim().Replace("\u00A0", "");
+            sanPham.SSD = sanPham.SSD?.Trim().Replace("\u00A0", "");
             ViewBag.TrangThaiList = trangThaiList;
             return View(sanPham);
         }
@@ -156,6 +161,8 @@ namespace WebApplication17.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    sanPham.RAM = sanPham.RAM?.Trim().Replace("\u00A0", "");
+                    sanPham.SSD = sanPham.SSD?.Trim().Replace("\u00A0", "");
                     sanPham.mota = System.Web.HttpUtility.HtmlDecode(sanPham.mota ?? "");
 
                     // Danh sách tên file ảnh
@@ -183,6 +190,7 @@ namespace WebApplication17.Areas.Admin.Controllers
                     db.Entry(sanPham).State = EntityState.Modified;
                     db.SaveChanges();
                 }
+
                 return RedirectToAction("Index");
             }
             catch (Exception ex)

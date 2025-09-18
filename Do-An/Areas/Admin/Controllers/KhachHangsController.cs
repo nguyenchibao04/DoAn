@@ -106,16 +106,25 @@ namespace WebApplication17.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "makhachhang,hoten,diachi,dienthoai,email,matkhau,trangthai,chucvu,tinh,huyen,xa,thon")] KhachHang khachHang)
+        public ActionResult Edit(KhachHang model)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(khachHang).State = EntityState.Modified;
+                var khachHang = db.KhachHang.Find(model.makhachhang);
+                if (khachHang == null) return HttpNotFound();
+
+                
+                db.Entry(khachHang).CurrentValues.SetValues(model);
+
+               
+                db.Entry(khachHang).Property(x => x.ngaydangky).IsModified = false;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(khachHang);
+            return View(model);
         }
+
         public ActionResult DeleteConfirmed(int? id)
         {
             KhachHang khachHang = db.KhachHang.Find(id);

@@ -2,6 +2,7 @@
     font-family: 'Font Sans-serif', Tahoma, Arial, sans-serif;
     line-height: 1.6; /* khoảng cách dòng dễ đọc */
     color: #333; /* màu chữ mặc định */
+    
 }
 
 .category-dropdown .side-nav ul li a {
@@ -327,6 +328,7 @@ main {
     line-height: 1.7; /* giãn dòng cho dễ đọc */
     color: #333; /* màu chữ dịu hơn */
     font-size: 16px; /* cỡ chữ chuẩn */
+
 }
 
     main h2 {
@@ -373,3 +375,123 @@ main {
         background-color: #f0c040; /* màu vàng nhẹ khi hover */
         color: #000; /* chữ đen nổi bật */
     }
+
+
+.heading-right .btn {
+    border-color: #fcb900; /* màu viền vàng */
+    color: #fcb900; /* chữ vàng */
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+    .heading-right .btn:hover {
+        background-color:darkblue; /* nền vàng */
+        color: #fff; /* chữ trắng */
+        transform: translateY(-2px); /* nhích lên khi hover */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* đổ bóng */
+    }
+
+
+
+.btndathang {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #fcb900;
+    color: #fcb900;
+    background: #fff;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+    .btndathang:hover {
+        color: #fff;
+        background: #fcb900; /* đổi nền xanh */
+        box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4); /* đổ bóng nổi */
+        transform: translateY(-3px); /* nổi lên chút xíu */
+    }
+
+    /* Hiệu ứng lan sóng khi click */
+    .btndathang::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .btndathang:active::after {
+        width: 300px;
+        height: 300px;
+    }
+
+
+/* Định dạng lại độ rộng cột */
+.col-ma {
+    width: 8%;
+}
+
+.col-ten {
+    width: 15%;
+}
+
+.col-sdt {
+    width: 12%;
+}
+
+.col-diachi {
+    width: 20%;
+}
+
+.col-ngay {
+    width: 12%;
+}
+
+.col-tongtien {
+    width: 13%;
+}
+
+.col-trangthai {
+    width: 12%;
+}
+
+.col-chitiet {
+    width: 8%;
+}
+
+/* Làm đẹp thêm */
+.table-cart th,
+.table-cart td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.table-cart th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.table-cart td {
+    font-size: 14px;
+}
+
+.donhangchitiet {
+    background: #f0f0f0;
+    border-radius: 50%;
+    padding: 6px 8px;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+
+.news-content p, .news-content ul li {
+    font-weight: 500 !important;
+}
+
+
+
+

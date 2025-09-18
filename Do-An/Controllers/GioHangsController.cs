@@ -58,7 +58,7 @@ namespace WebApplication17.Controllers
                 int tonKho = sp.soluong ?? 0;
                 int soLuongMoi = gioHang.soluong <= 0 ? 1 : gioHang.soluong;
 
-                // ✅ Chặn vượt kho
+                //  Chặn vượt kho
                 if (soLuongMoi > tonKho)
                 {
                     return Json(new { success = false, message = "NotEnoughStock", available = tonKho });
@@ -120,8 +120,8 @@ namespace WebApplication17.Controllers
                 // Tính phí vận chuyển dựa trên tỉnh/thành phố
                 switch (tinh)
                 {
-                    case "Hà Nội": phiVanChuyen += 30000 * item.soluong; break;
-                    case "Hồ Chí Minh": phiVanChuyen += 35000 * item.soluong; break;
+                    case "Thành phố Hà Nội": phiVanChuyen += 30000 * item.soluong; break;
+                    case "Thành phố Hồ Chí Minh": phiVanChuyen += 35000 * item.soluong; break;
                     default: phiVanChuyen += 40000 * item.soluong; break;
                 }
 
@@ -145,7 +145,7 @@ namespace WebApplication17.Controllers
                 trangthai = TrangThaiDonHang.ChoXacNhan,
                 thanhtoan = (phuongThucTT == "banking") ? "Chuyển khoản ngân hàng" : "Thanh toán khi nhận hàng",
                 ngaydat = DateTime.Now,
-                ngaynhan = DateTime.Now.AddDays(3),
+                ngaynhan = DateTime.Now.AddDays(7),
                 dienthoai = Request.Form["dienthoai"],
                 soluongmua = soLuongMua
             };
@@ -167,10 +167,9 @@ namespace WebApplication17.Controllers
                 {
                     madonhang = donHang.madonhang,
                     masp = item.masp,
-                    soluong = item.soluong,
-                    // ✅ Lấy giá trong giỏ hàng (đã cộng option)
+                    soluong = item.soluong,               
                     gia = item.giaban,
-                    CauHinhThem = item.CauHinhThem,   // <-- chỗ này
+                    CauHinhThem = item.CauHinhThem,   
                     tongtien = (item.giaban * item.soluong) + phiVanChuyen
                 };
 
@@ -183,7 +182,7 @@ namespace WebApplication17.Controllers
             Session["giohang"] = 0;
 
            
-            // Gửi email như cũ
+       
             string contentCustomer = System.IO.File.ReadAllText(Server.MapPath("~/Content/Template/send2.html"));
             contentCustomer = contentCustomer.Replace("{{madon}}", donHang.madonhang.ToString());
             contentCustomer = contentCustomer.Replace("{{sanpham}}", strSanPham);
@@ -226,13 +225,21 @@ namespace WebApplication17.Controllers
                 // Lấy giá trong giỏ hàng (đã cộng option)
                 tongTien += (decimal)(item.giaban * item.soluong);
             }
+            decimal tongTienSanPham = gioHang.Sum(item => (decimal)(item.giaban * item.soluong));
 
-            decimal phiVanChuyen = 30000;
-            if (tinh == "Hà Nội") phiVanChuyen = 30000;
-            else if (tinh == "Hồ Chí Minh") phiVanChuyen = 35000;
-            else phiVanChuyen = 40000;
+            // Xác định phí vận chuyển cho 1 sản phẩm theo tỉnh
+            decimal phiMotSP = 0;
+            if (tinh == "Thành phố Hà Nội") phiMotSP = 30000;
+            else if (tinh == "Thành phố Hồ Chí Minh") phiMotSP = 35000;
+            else phiMotSP = 40000;
 
-            decimal tongTienThanhToan = tongTien + phiVanChuyen;
+            // Tổng phí vận chuyển (nhân theo số lượng sản phẩm)
+            int tongSoLuong = gioHang.Sum(item => item.soluong);
+            decimal phiVanChuyen = phiMotSP * tongSoLuong;
+
+            // Tổng thanh toán
+            decimal tongTienThanhToan = tongTienSanPham + phiVanChuyen;
+
 
             return Json(new { phiVanChuyen = phiVanChuyen.ToString("N0"), tongTien = tongTienThanhToan.ToString("N0") });
         }
@@ -294,7 +301,7 @@ namespace WebApplication17.Controllers
 
                 if (responseCode == "00")
                 {
-                    // ✅ Thanh toán thành công
+                    //  Thanh toán thành công
                     var donhang = db.DonHang.Find(int.Parse(orderId));
                     if (donhang != null)
                     {

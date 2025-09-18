@@ -43,7 +43,7 @@
                                     <label><b>Ngày Đặt:</b> @Model.ngaydat.ToString("dd/MM/yyyy")</label>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label><b>Ngày Nhận Dự Kiến:</b> @Model.ngaynhan.ToString("dd/MM/yyyy")</label>
+                                    <label><b>Ngày Nhận Dự Kiến ( Trong vòng 7 ngày):</b> @Model.ngaynhan.ToString("dd/MM/yyyy")</label>
                                 </div>
                             </div>
 
@@ -148,7 +148,7 @@
 
                         <div class="mt-3">
                             @if (Model.trangthai == TrangThaiDonHang.ChoXacNhan
-|| Model.trangthai == TrangThaiDonHang.DaThanhToan)
+                                || Model.trangthai == TrangThaiDonHang.DaThanhToan)
                             {
                                 <button class="btn btn-danger" id="btnCancelOrder" data-id="@Model.madonhang">
                                     Hủy đơn hàng

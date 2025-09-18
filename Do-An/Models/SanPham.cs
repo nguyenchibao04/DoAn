@@ -32,6 +32,7 @@
 
         public int? soluong { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:0}", ApplyFormatInEditMode = true)]
         public decimal? giaban { get; set; }
 
         [AllowHtml]

@@ -27,9 +27,6 @@ namespace WebApplication17.Models
 
         public bool? trangthai { get; set; }
 
-        public int? makhachhang { get; set; }
-
-        
         [AllowHtml]
         [Column(TypeName = "nvarchar(MAX)")]
         public string noidung { get; set; }

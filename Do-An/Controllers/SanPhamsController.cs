@@ -37,12 +37,12 @@ namespace WebApplication17.Controllers
         public ActionResult Index(int? page, List<int> brands, string price, int? category)
         {
             var searchString = Request.Form["timkiem"];
-            int pageSize = 16;
+            int pageSize = 12;
             int pageNumber = page ?? 1;
 
             // Lấy dữ liệu cơ bản từ DB, loc theo hang SP
             var sanPhamsQuery = db.SanPham.Include(s => s.HangSP)
-                                         .Where(s => s.trangthai == true);
+                                         .Where(s => s.trangthai == true && s.HangSP.trangthai==true);
 
             if (category != null)
             {
@@ -132,6 +132,10 @@ namespace WebApplication17.Controllers
             listsp.Remove(sanPham);
             ViewBag.ds = listsp;
 
+            
+            ViewBag.RamPrices = RamPrices;
+            ViewBag.SsdPrices = SsdPrices;
+
             return View(sanPham);
         }
 
@@ -148,8 +152,8 @@ namespace WebApplication17.Controllers
         public ActionResult AddToCart(
             int id,
             int soluong = 1,
-            string RamOption = "8GB",
-            string SsdOption = "256GB",
+            string RamOption = null,
+            string SsdOption = null,
             string returnController = "SanPhams",
             string returnAction = "Index")
         {
@@ -163,6 +167,10 @@ namespace WebApplication17.Controllers
             var sp = db.SanPham.Find(id);
             if (sp == null || sp.trangthai != true)
                 return Json(new { success = false, message = "NotFound" });
+
+
+            RamOption = string.IsNullOrEmpty(RamOption) ? sp.RAM : RamOption;
+            SsdOption = string.IsNullOrEmpty(SsdOption) ? sp.SSD : SsdOption;
 
             int tonKho = sp.soluong ?? 0;
             if (soluong <= 0) soluong = 1;
@@ -209,7 +217,7 @@ namespace WebApplication17.Controllers
             return Json(new { success = true, count = cartCount });
         }
 
-        public ActionResult MuaNgay(int id, int soluong = 1, string RamOption = "8GB", string SsdOption = "256GB")
+        public ActionResult MuaNgay(int id, int soluong = 1, string RamOption = null, string SsdOption = null)
         {
             if (Session["ma"] == null)
                 return RedirectToAction("Index", "Login");
@@ -218,6 +226,8 @@ namespace WebApplication17.Controllers
             if (sp == null || sp.trangthai != true)
                 return HttpNotFound();
 
+            RamOption = string.IsNullOrEmpty(RamOption) ? sp.RAM : RamOption;
+            SsdOption = string.IsNullOrEmpty(SsdOption) ? sp.SSD : SsdOption;
             int tonKho = sp.soluong ?? 0;
             if (soluong <= 0) soluong = 1;
 
@@ -258,14 +268,16 @@ namespace WebApplication17.Controllers
         {
             { "8GB", 0 },
             { "16GB", 500000 },
-            { "32GB", 1200000 }
+            { "32GB", 1200000 },
+            { "64GB", 6200000 }
         };
 
         private readonly Dictionary<string, decimal> SsdPrices = new Dictionary<string, decimal>
         {
             { "256GB", 0 },
             { "512GB", 800000 },
-            { "1TB", 1500000 }
+            { "1TB", 1500000 },
+            { "2TB", 5500000 }
         };
     }
 }

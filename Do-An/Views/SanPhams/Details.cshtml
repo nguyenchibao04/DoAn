@@ -4,11 +4,25 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<WebApplication17.Models.SanPham> dslq = ViewBag.ds;
+
+    var ramPrices = ViewBag.RamPrices as Dictionary<string, decimal>;
+    var ramList = ramPrices.Keys.ToList();
+    var ramIndex = ramList.IndexOf(Model.RAM);
+    var upgradeRamOptions = ramList.Skip(ramIndex + 1);
+
+    var ssdPrices = ViewBag.SsdPrices as Dictionary<string, decimal>;
+    var ssdList = ssdPrices.Keys.ToList();
+
+    var currentSsd = (Model.SSD ?? "").Trim();
+
+    var ssdIndex = ssdList.FindIndex(x => x.Equals(currentSsd, StringComparison.OrdinalIgnoreCase));
+
+    //lấy option lớn hơn
+    var upgradeSsdOptions = ssdIndex >= 0 ? ssdList.Skip(ssdIndex + 1) : new List<string>();
 }
 
 <div class="page-wrapper">
     <main class="main">
-        <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
             <div class="container d-flex align-items-center">
                 <ol class="breadcrumb"></ol>
@@ -20,7 +34,7 @@
         <!-- Nội dung -->
         <div class="page-content">
             <div class="container">
-                <!-- 🔝 Thông tin chi tiết sản phẩm -->
+                <!--  Thông tin chi tiết sản phẩm -->
                 <div class="product-details-top">
                     <div class="row">
                         <!-- Hình ảnh -->
@@ -80,23 +94,37 @@
                                     <span id="final-price" style="color:red; font-weight:bold;"></span>
                                 </div>
 
+
                                 <div class="details-filter-row details-row-size">
                                     <label>RAM:</label>
                                     <select id="ramOption" class="form-control" style="width:150px; display:inline-block;">
-                                        <option value="8GB" data-extra="0" selected>@Model.RAM (mặc định)</option>
-                                        <option value="16GB" data-extra="500000">16GB (+500.000 đ)</option>
-                                        <option value="32GB" data-extra="1200000">32GB (+1.200.000 đ)</option>
+                                        <option value="@Model.RAM" data-extra="0" selected>@Model.RAM (mặc định)</option>
+                                        @foreach (var ram in upgradeRamOptions)
+                                        {
+                                            var extra = ramPrices[ram] - ramPrices[Model.RAM];
+                                            <option value="@ram" data-extra="@extra">@ram (+@extra.ToString("N0") đ)</option>
+                                        }
                                     </select>
                                 </div>
+
+
 
                                 <div class="details-filter-row details-row-size">
                                     <label>SSD:</label>
                                     <select id="ssdOption" class="form-control" style="width:150px; display:inline-block;">
-                                        <option value="256GB" data-extra="0" selected>@Model.SSD (mặc định)</option>
-                                        <option value="512GB" data-extra="800000">512GB (+800.000 đ)</option>
-                                        <option value="1TB" data-extra="1500000">1TB (+1.500.000 đ)</option>
+                                        <option value="@Model.SSD" data-extra="0" selected>@Model.SSD (mặc định)</option>
+                                        @foreach (var ssd in upgradeSsdOptions)
+                                        {
+                                            decimal priceSsd = 0, priceModel = 0;
+                                            ssdPrices.TryGetValue(ssd, out priceSsd);
+                                            ssdPrices.TryGetValue(currentSsd, out priceModel);
+
+                                            var extra = priceSsd - priceModel;
+                                            <option value="@ssd" data-extra="@extra">@ssd (+@extra.ToString("N0") đ)</option>
+                                        }
                                     </select>
-                                </div>
+                                </div>  
+
 
                                 <!--  Kho -->
                                 <div class="details-filter-row details-row-size">
@@ -256,7 +284,7 @@
 <script>
     $(document).ready(function () {
 
-        // ===== ADD TO CART / BUY NOW (unchanged) =====
+        //  ADD TO CART / BUY NOW
         $('.btn-cart').click(function () {
             const productId = $(this).data('product-id');
             const stock = parseInt($('#qty').data('qtyproduct'), 10) || 0;
@@ -304,7 +332,7 @@
             });
         }
 
-        // quantity guard
+  
         const inputElement = document.getElementById('qty');
         if (inputElement) {
             inputElement.addEventListener('change', function () {
@@ -374,7 +402,7 @@
             $("#zoomed-image").attr("src", this.src);
             $("#imageZoomModal").modal("show");
             setTimeout(() => {
-                $("#zoomed-image").css("transform", "scale(1.8)"); // zoom mạnh hơn
+                $("#zoomed-image").css("transform", "scale(1.8)"); 
             }, 100);
         });
     });

@@ -35,18 +35,25 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label>Tỉnh / Thành Phố *</label>
-                                    <select class="form-control" id="tinh" name="tinh"></select>
+                                    <select class="form-control" id="tinh" name="tinh" data-selected="@kh.tinh" required>
+                                        <option value="">--Chọn Tỉnh/TP--</option>
+                                    </select>
                                 </div>
                                 <div class="col-sm-6">
                                     <label>Quận / Huyện *</label>
-                                    <input type="text" class="form-control" name="huyen" value="@kh.huyen" required>
+                                    <select class="form-control" id="huyen" name="huyen" data-selected="@kh.huyen" required>
+                                        <option value="">--Chọn Quận/Huyện--</option>
+                                    </select>
                                 </div>
+
                             </div>
 
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label>Phường / Xã *</label>
-                                    <input type="text" class="form-control" name="phuongxa" value="@kh.xa" required>
+                                    <select class="form-control" id="xa" name="phuongxa" data-selected="@kh.xa" required>
+                                        <option value="">--Chọn Phường/Xã--</option>
+                                    </select>
                                 </div>
                                 <div class="col-sm-6">
                                     <label>Điện Thoại *</label>
@@ -65,7 +72,8 @@
                                     <thead>
                                         <tr>
                                             <th>Tên Sản Phẩm</th>
-                                            <th>Thành Tiền</th>
+                                            <th>Số Lượng</th>
+                                            <th>Giá Bán</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -73,10 +81,11 @@
                                         {
                                             foreach (var item in Model.Where(x => x.giaban != null && x.giaban > 0))
                                             {
-                                                decimal gia = (item.giaban ?? 0) * item.soluong;
+                                                decimal gia = (item.giaban ?? 0);
                                                 TienHang += gia;
                                                 <tr>
                                                     <td>@item.SanPham.tensp (@item.CauHinhThem)</td>
+                                                    <td>@item.soluong</td>
                                                     <td>@gia.ToString("N0")</td>
                                                 </tr>
                                             }
@@ -101,7 +110,7 @@
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block mt-2">
+                                <button type="submit" class="btndathang">
                                     <span class="btn-text">ĐẶT HÀNG</span>
                                 </button>
                             </div>
@@ -115,30 +124,87 @@
 
 <script src="~/Scripts/jquery-3.7.0.min.js"></script>
 <script>
-    $(document).ready(function(){
-        // Load danh sách tỉnh/thành phố từ JSON
-        $.getJSON('/Content/diachi.json', function(data){
-            var select = $("#tinh");
-            select.empty();
-            $.each(data.tinh, function(index, item){
-                var selected = "@kh.tinh" === item ? "selected" : "";
-                select.append('<option value="'+item+'" '+selected+'>'+item+'</option>');
-            });
-            // Tính phí vận chuyển khi load page
-            updatePhiVanChuyen();
+$(document).ready(function () {
+    var selectedTinh = $("#tinh").data("selected");
+    var selectedHuyen = $("#huyen").data("selected");
+    var selectedXa = $("#xa").data("selected");
+
+    // Load tỉnh
+    $.get("https://provinces.open-api.vn/api/p/", function (data) {
+        var tinhSelect = $("#tinh");
+        tinhSelect.empty().append('<option value="">--Chọn Tỉnh/TP--</option>');
+        data.forEach(function (item) {
+            var selected = (item.name === selectedTinh) ? "selected" : "";
+            tinhSelect.append('<option value="' + item.name + '" data-code="' + item.code + '" ' + selected + '>' + item.name + '</option>');
         });
 
-        // Khi chọn tỉnh/thành phố, tự động cập nhật phí vận chuyển và tổng tiền
-        $("#tinh").change(function(){
-            updatePhiVanChuyen();
-        });
-
-        function updatePhiVanChuyen(){
-            var tinh = $("#tinh").val();
-            $.post("/GioHangs/CapNhatPhiVanChuyen", { tinh: tinh }, function(data){
-                $("#phiVanChuyen").text(data.phiVanChuyen);
-                $("#tongTien").text(data.tongTien);
-            });
+        // Nếu có sẵn tỉnh -> load huyện
+        if (selectedTinh) {
+            var tinhCode = $("#tinh option:selected").data("code");
+            loadHuyen(tinhCode, true); // true nghĩa là tự động tính phí sau khi load huyện
         }
     });
+
+    // Khi chọn tỉnh -> load huyện
+    $("#tinh").change(function () {
+        var tinhCode = $("#tinh option:selected").data("code");
+        $("#huyen").empty().append('<option value="">--Chọn Quận/Huyện--</option>');
+        $("#xa").empty().append('<option value="">--Chọn Phường/Xã--</option>');
+        if (tinhCode) {
+            loadHuyen(tinhCode, false);
+        }
+        updatePhiVanChuyen();
+    });
+
+    // Khi chọn huyện -> load xã
+    $("#huyen").change(function () {
+        var huyenCode = $("#huyen option:selected").data("code");
+        $("#xa").empty().append('<option value="">--Chọn Phường/Xã--</option>');
+        if (huyenCode) {
+            loadXa(huyenCode);
+        }
+        updatePhiVanChuyen();
+    });
+
+    function loadHuyen(tinhCode, autoTinhPhi) {
+        $.get("https://provinces.open-api.vn/api/p/" + tinhCode + "?depth=2", function (data) {
+            data.districts.forEach(function (h) {
+                var selected = (h.name === selectedHuyen) ? "selected" : "";
+                $("#huyen").append('<option value="' + h.name + '" data-code="' + h.code + '" ' + selected + '>' + h.name + '</option>');
+            });
+
+            // Nếu có sẵn huyện -> load xã
+            if (selectedHuyen) {
+                var huyenCode = $("#huyen option:selected").data("code");
+                loadXa(huyenCode);
+            }
+
+            // Tự động tính phí khi load xong
+            if (autoTinhPhi) {
+                updatePhiVanChuyen();
+            }
+        });
+    }
+
+    function loadXa(huyenCode) {
+        $.get("https://provinces.open-api.vn/api/d/" + huyenCode + "?depth=2", function (data) {
+            data.wards.forEach(function (xa) {
+                var selected = (xa.name === selectedXa) ? "selected" : "";
+                $("#xa").append('<option value="' + xa.name + '" ' + selected + '>' + xa.name + '</option>');
+            });
+        });
+    }
+
+    // Tính phí vận chuyển
+    function updatePhiVanChuyen() {
+        var tinh = $("#tinh").val();
+        if (!tinh) return; // nếu chưa có tỉnh thì không tính
+        var tienHang = @TienHang; // lấy giá trị TienHang từ Razor
+        $.post("/GioHangs/CapNhatPhiVanChuyen", { tinh: tinh, tienHang: tienHang }, function (data) {
+            $("#phiVanChuyen").text(data.phiVanChuyen.toLocaleString());
+            $("#tongTien").text(data.tongTien.toLocaleString());
+        });
+    }
+});
+
 </script>

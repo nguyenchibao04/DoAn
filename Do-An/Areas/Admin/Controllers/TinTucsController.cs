@@ -41,7 +41,6 @@ namespace WebApplication17.Areas.Admin.Controllers
         // GET: Admin/TinTucs/Create
         public ActionResult Create()
         {
-            ViewBag.makhachhang = new SelectList(db.KhachHang.Where(s => s.chucvu == true), "makhachhang", "hoten");
             List<SelectListItem> trangThaiList = new List<SelectListItem>
             {
                 new SelectListItem { Value = "true", Text = "Hiển thị" },
@@ -56,7 +55,7 @@ namespace WebApplication17.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]  // Cho phép HTML
-        public ActionResult Create([Bind(Include = "matintuc,tieude,hinhanh,ngaytao,gioithieu,trangthai,makhachhang,noidung")] TinTuc tinTuc)
+        public ActionResult Create([Bind(Include = "matintuc,tieude,hinhanh,ngaytao,gioithieu,trangthai,noidung")] TinTuc tinTuc)
         {
             try
             {
@@ -79,7 +78,6 @@ namespace WebApplication17.Areas.Admin.Controllers
             }
             catch (Exception)
             {
-                ViewBag.makhachhang = new SelectList(db.KhachHang, "makhachhang", "hoten", tinTuc.makhachhang);
                 return View(tinTuc);
             }
         }
@@ -96,7 +94,6 @@ namespace WebApplication17.Areas.Admin.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.makhachhang = new SelectList(db.KhachHang.Where(s => s.chucvu == true), "makhachhang", "hoten", tinTuc.makhachhang);
             List<SelectListItem> trangThaiList = new List<SelectListItem>
             {
                 new SelectListItem { Value = "true", Text = "Hiển thị" },
@@ -111,7 +108,7 @@ namespace WebApplication17.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]  
         
-        public ActionResult Edit([Bind(Include = "matintuc,tieude,hinhanh,gioithieu,trangthai,makhachhang,noidung")] TinTuc tinTuc)
+        public ActionResult Edit([Bind(Include = "matintuc,tieude,hinhanh,gioithieu,trangthai,noidung")] TinTuc tinTuc)
         {
             try
             {
@@ -123,7 +120,7 @@ namespace WebApplication17.Areas.Admin.Controllers
                         return HttpNotFound();
                     }
 
-                    // Giữ nguyên ngày tạo cũ
+                   
                     tinTuc.ngaytao = existingTinTuc.ngaytao;
 
                     // Xử lý upload ảnh
@@ -149,7 +146,6 @@ namespace WebApplication17.Areas.Admin.Controllers
             }
             catch (Exception)
             {
-                ViewBag.makhachhang = new SelectList(db.KhachHang, "makhachhang", "hoten", tinTuc.makhachhang);
                 return View(tinTuc);
             }
 

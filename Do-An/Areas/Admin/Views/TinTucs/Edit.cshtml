@@ -103,14 +103,14 @@
                         <label for="exampleInputEmail1">Hình ảnh</label>
                         @Html.EditorFor(model => model.hinhanh, new { htmlAttributes = new { @class = "form-control d-none" } })
 
-                        <div id="previewImage" class="mb-2">
-                            @if (!string.IsNullOrEmpty(Model.hinhanh))
-                            {
-                                <img class="img-thumbnail"
-                                     src="@Url.Content("~/wwwroot/images/" + Model.hinhanh)"
-                                     width="200" height="200" />
-                            }
-                        </div>
+                    <div id="previewImage" class="mb-2">
+                        @if (!string.IsNullOrEmpty(Model.hinhanh))
+                        {
+                            <img class="img-thumbnail"
+                                 src="@Url.Content("~/wwwroot/tintuc/" + Model.hinhanh)"
+                                 width="200" height="200" />
+                        }
+                    </div>
 
                         <p>
                             <label for="ufile" style="cursor:pointer">Chọn hình ảnh</label>

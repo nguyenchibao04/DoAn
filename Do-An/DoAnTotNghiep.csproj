@@ -436,6 +436,7 @@
     <Content Include="wwwroot\images\bannertop1.jpg" />
     <Content Include="wwwroot\images\bannertop2.jpg" />
     <Content Include="wwwroot\images\bannertop3.jpg" />
+    <Content Include="wwwroot\images\core1.jpg" />
     <Content Include="wwwroot\images\login.jpg" />
     <Content Include="wwwroot\images\MB-0384384378-print.png" />
     <Content Include="wwwroot\images\pcvanphong.jpg" />
@@ -464,7 +465,6 @@
     <Content Include="Areas\Admin\Views\SanPhams\Details.cshtml" />
     <Content Include="Areas\Admin\Views\SanPhams\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\SanPhams\Index.cshtml" />
-    <Content Include="Content\diachi.json" />
     <Content Include="Areas\Admin\Views\TinTucs\Create.cshtml" />
     <Content Include="Areas\Admin\Views\TinTucs\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\TinTucs\Details.cshtml" />

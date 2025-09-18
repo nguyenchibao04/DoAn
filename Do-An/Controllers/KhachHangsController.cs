@@ -40,8 +40,7 @@ namespace WebApplication17.Controllers
             khach.dienthoai = dienthoai;
             khach.tinh = tinh;
             khach.huyen = huyen;
-            khach.xa = xa;
-            
+            khach.xa = xa;          
             khach.diachi = diachi;
 
             db.SaveChanges();

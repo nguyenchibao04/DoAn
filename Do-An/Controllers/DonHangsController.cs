@@ -67,22 +67,6 @@ namespace WebApplication17.Controllers
             return Json(new { success = true });
         }
 
-        [HttpPost]
-        public ActionResult XacNhan(int id)
-        {
-            var donHang = db.DonHang.Find(id);
-            if (donHang == null)
-                return Json(new { success = false, message = "Không tìm thấy đơn hàng" });
-
-            // ✅ Chỉ xác nhận khi đơn hàng đang ở trạng thái "Chờ xác nhận" hoặc "Đã thanh toán"
-            if (donHang.trangthai == TrangThaiDonHang.ChoXacNhan || donHang.trangthai == TrangThaiDonHang.DaThanhToan)
-            {
-                donHang.trangthai = TrangThaiDonHang.DangGiao;
-                db.SaveChanges();
-                return Json(new { success = true, message = "Đơn hàng đã chuyển sang trạng thái Đang giao." });
-            }
-
-            return Json(new { success = false, message = "Không thể xác nhận đơn hàng ở trạng thái hiện tại." });
-        }
+       
     }
 }

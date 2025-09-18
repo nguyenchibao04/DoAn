@@ -39,6 +39,11 @@ namespace WebApplication17.Controllers
                     message = "Đăng nhập admin thành công"
                 });
             }
+            if (user.trangthai == true)
+            {
+                return Json(new { success = false, message = "Tài khoản đã bị khóa, không thể đăng nhập" });
+
+            }
 
             // user thường
             Session["ma"] = user.makhachhang; 
@@ -71,14 +76,19 @@ namespace WebApplication17.Controllers
                 return Json(new { success = false, message = "Email đã tồn tại" });
             }
 
+           
+
             KhachHang kh = new KhachHang
             {
                 hoten = hoten,
                 email = email,
                 matkhau = pass,
+                chucvu=false,
+                trangthai=false,
                 ngaydangky = DateTime.Now
             };
 
+            
             db.KhachHang.Add(kh);
             db.SaveChanges();
 
